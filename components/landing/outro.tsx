@@ -15,6 +15,8 @@ import {Logo} from '@/components/harvex/navbar';
 import {Headline} from './features';
 import {SiteFooter} from '@/components/harvex/site-footer';
 import {useTokenStage,type TokenStage} from '@/components/harvex/token-context';
+import {RewardEligibility} from '@/components/harvex/reward-eligibility';
+import {REWARD_PLAN} from '@/lib/site';
 
 import type {View} from '@/lib/routes';
 type Go=(v:View,doc?:string)=>void;
@@ -22,7 +24,7 @@ type Go=(v:View,doc?:string)=>void;
 /* What the reward band says for each state the server reports: [note under the card, status sentence]. */
 const REWARD_STATE:Record<TokenStage,[string,string]>={
  test:['Testnet. No real reward is paid from here.','You are looking at a testnet build, and it pays no real reward.'],
- none:['A plan. No payment before a token and a vault exist.','HARVEX has not launched and no reward token has been picked, so not one payment has been made.'],
+ none:['A plan. No payment before a token and a vault exist.','HARVEX has not launched and no reward vault exists, so not one payment has been made.'],
  token:['Token out. Holder rewards still off.','HARVEX has launched, yet the holder reward is off, so no period has been paid.'],
  rewards:['Running. Claims are on the Rewards page.','The holder reward is on, and the Rewards page lists each period that was paid.'],
 };
@@ -40,8 +42,8 @@ export function TokenBand({onNavigate}:{onNavigate:Go}){
      <div className="grid w-[270px] gap-1">
       <Card className="items-center gap-3 rounded-2xl p-6 text-center shadow-[0_30px_60px_-36px_rgb(0_0_0/.35)]">
        <span className="flex rounded-lg border p-0.5 text-xs"><span className="rounded-lg bg-foreground px-3 py-0.5 text-background">Status</span><span className="px-3 py-0.5 text-muted-foreground">Chain</span></span>
-       <b className="mt-2 font-display text-6xl leading-none font-medium tracking-[-.05em]">BEP-20</b>
-       <span className="font-mono text-[10px] tracking-[.08em] text-muted-foreground uppercase">The reward token · sent on-chain</span>
+       <b className="mt-2 font-display text-6xl leading-none font-medium tracking-[-.05em]">{REWARD_PLAN.symbol}</b>
+       <span className="font-mono text-[10px] tracking-[.08em] text-muted-foreground uppercase">The planned reward · a BEP-20 token</span>
        <CutButton size="sm" variant="lime" className="mt-1" onClick={()=>onNavigate('paper')}>Read the design <I id="arrow"/></CutButton>
       </Card>
       <div className="rounded-2xl border border-dashed bg-card px-4 py-3 font-mono text-[10px] tracking-[.06em] uppercase">{note}</div>
@@ -53,10 +55,11 @@ export function TokenBand({onNavigate}:{onNavigate:Go}){
     </Reveal>
    </div>
   </div>
+  <Reveal className="mx-auto max-w-[1180px] px-4 pt-[clamp(28px,4vw,48px)]"><RewardEligibility/></Reveal>
   <div className="mx-auto grid max-w-[1180px] items-start gap-8 px-4 pt-16 pb-6 md:grid-cols-[240px_1fr]">
    <Eyebrow tone="amber">{stage==='none'?'What it is meant to add':'What it adds'}</Eyebrow>
    <Reveal className="grid max-w-[640px] gap-6">
-    <p className="text-[clamp(20px,2vw,27px)] leading-snug font-medium tracking-[-.02em]">Running agents already earns their creators credits. Holding HARVEX is meant to add two things on top: a lower platform fee, and a holder reward at a fixed rate per 3,000,000 HARVEX, paid in a token on BNB Smart Chain out of a vault each holder claims from directly.</p>
+    <p className="text-[clamp(20px,2vw,27px)] leading-snug font-medium tracking-[-.02em]">Running agents already earns their creators credits. Holding HARVEX is meant to add two things on top: a lower platform fee, and a holder reward at a fixed rate per 3,000,000 HARVEX, paid in {REWARD_PLAN.symbol}, {REWARD_PLAN.what}, out of a vault each holder claims from directly.</p>
     <p className="text-sm text-muted-foreground">{status} No audit of the contract has been done and no legal review has been published. Before any claim, a holder would have to confirm they are eligible. None of this is financial advice.</p>
     <div className="flex flex-wrap gap-2"><CutButton onClick={()=>onNavigate('paper')}>Token design</CutButton><CutButton variant="outline" onClick={()=>onNavigate('roadmap')}>Roadmap</CutButton></div>
    </Reveal>

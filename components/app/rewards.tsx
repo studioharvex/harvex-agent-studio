@@ -4,9 +4,12 @@
    wallet's Transfer history (holder recorder), converted to that token at the live Chainlink price when each hourly period is
    built, and paid from an on-chain vault (a HarvexClaims instance) that the holder claims from with their own wallet.
    While the program is off (no HARVEX token, no reward token, no vault) the page shows the rule, a calculator and what is
-   built. The reward token is whatever the server names (REWARD_TOKEN_SYMBOL); none is chosen in this build. */
+   built. The reward token is whatever the server names (REWARD_TOKEN_SYMBOL); while it names none, the page uses the
+   planned one (REWARD_PLAN in lib/site.ts: NVDA, a name without an address). */
 import {useCallback,useEffect,useState,type ReactNode} from 'react';
 import {Token} from '@/components/harvex/web3';
+import {RewardEligibility} from '@/components/harvex/reward-eligibility';
+import {REWARD_PLAN} from '@/lib/site';
 import {toast} from 'sonner';
 import {formatUnits} from 'viem';
 import {Button} from '@/components/ui/button';
@@ -42,8 +45,8 @@ const when=(ts:number)=>new Date(ts*1000).toLocaleString(undefined,{day:'numeric
 const closeLabel=(ts:number)=>new Date(ts*1000).toLocaleString(undefined,{weekday:'short',hour:'2-digit',minute:'2-digit'});
 const walletError=(e:any)=>e?.code===4001?'The request was cancelled in your wallet.':(e?.shortMessage||e?.message||'Your wallet did not complete the request.');
 const perText=(d:Overview|null)=>Number(d?.harvexPerUnit||3_000_000).toLocaleString('en-US');
-/** What the page calls the reward token while the server names none. */
-const NO_TOKEN='the reward token';
+/** What the page calls the reward token while the server names none: the planned one. */
+const NO_TOKEN=REWARD_PLAN.symbol;
 /** "every 3,000,000 HARVEX = $0.01 of USDT per hour" from the live settings. */
 const ruleText=(d:Overview|null,sym=NO_TOKEN)=>`every ${perText(d)} HARVEX = $${d?.usdPerUnitHour||'0.01'} of ${sym} per hour`;
 
@@ -69,8 +72,10 @@ export function RewardsPage({wallet,auth,onSignIn,onPaper}:{wallet?:string;auth:
 
   {!live&&<div className="flex flex-wrap items-start gap-3 rounded-xl border bg-t-amber p-4 text-[13.5px]">
    <ToneIcon icon="shield" tone="amber" className="size-8"/>
-   <div className="grid flex-1 gap-1"><b className="font-semibold">{hasToken?'Holder rewards are switched off. No one is paid and no claim can be made.':'Holder rewards are a plan. No payment happens before a HARVEX token and a reward vault exist.'}</b><span className="text-muted-foreground">How it is designed: HARVEX that stays in your own wallet earns at a fixed rate. Payment is a token on BNB Smart Chain, kept in an on-chain vault that you claim from yourself. No reward token, vault or start date has been decided. The contract has had no audit and no legal review has been published. Every number here shows the rule this server would use and is not a promise.</span></div>
+   <div className="grid flex-1 gap-1"><b className="font-semibold">{hasToken?'Holder rewards are switched off. No one is paid and no claim can be made.':'Holder rewards are a plan. No payment happens before a HARVEX token and a reward vault exist.'}</b><span className="text-muted-foreground">How it is designed: HARVEX that stays in your own wallet earns at a fixed rate. Payment is a token on BNB Smart Chain, kept in an on-chain vault that you claim from yourself. The reward is planned as {REWARD_PLAN.symbol}, {REWARD_PLAN.what}; which issuer's token, the vault and a start date have not been decided. The contract has had no audit and no legal review has been published. Every number here shows the rule this server would use and is not a promise.</span></div>
   </div>}
+
+  <RewardEligibility per={Number(data?.harvexPerUnit||3_000_000)} rate={data?.usdPerUnitHour||'0.01'} sym={sym}/>
 
   <Pipeline data={data} live={live} hasToken={hasToken}/>
 

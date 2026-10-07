@@ -1,0 +1,11 @@
+Network and token marks in components/harvex/web3.tsx
+
+The shapes of the BNB Chain, Tether (USDT), Chainlink and WalletConnect marks are copied from Simple Icons
+(https://simpleicons.org, icon data under CC0 1.0), as shipped inside the react-icons package this project
+already depends on. They are drawn in one colour, next to the name they stand for.
+
+Each mark is a trademark of its owner. It is shown only to name the network or token a feature works with
+("Built on BNB Smart Chain", "Top up with USDT"). Harvex is an independent project: it is not affiliated with,
+endorsed by or partnered with BNB Chain, Binance, Tether, Chainlink or WalletConnect.
+
+The Harvex mark in the same file is the project's own (components/harvex/navbar.tsx).

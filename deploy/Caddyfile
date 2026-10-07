@@ -1,0 +1,9 @@
+# HTTPS in front of Harvex (docker-compose.standalone.yml). Caddy gets and renews the certificate itself (no e-mail needed).
+# HARVEX_DOMAIN=localhost serves a local test with Caddy's own development certificate.
+{$HARVEX_DOMAIN} {
+	encode zstd gzip
+	# the app sets its own security headers (CSP, HSTS, X-Frame-Options); Caddy only forwards
+	reverse_proxy harvex:8787 {
+		header_up X-Forwarded-Proto https
+	}
+}

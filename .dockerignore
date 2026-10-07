@@ -1,0 +1,25 @@
+# never send secrets, local databases or build output into the image
+.dev.vars*
+.env*
+deploy.config.json
+.wrangler
+.sites-runtime
+node_modules
+dist
+.vinext
+.next
+# not needed to build or run the site
+.git
+.claude
+.codex
+.agents
+.firecrawl
+references
+examples
+standalone
+HANDOFF
+outputs
+work
+coverage
+*.log
+exports

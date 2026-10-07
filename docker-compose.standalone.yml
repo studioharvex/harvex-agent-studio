@@ -1,0 +1,27 @@
+# Plain Docker host (a VPS without Coolify): adds Caddy in front of Harvex for HTTPS with automatic certificates.
+# The app refuses http origins, so it is never served without TLS. Point the domain's DNS (A/AAAA) at the server first.
+#   cp .env.compose.example .env        (fill it; .env is git-ignored)
+#   docker compose -f docker-compose.yml -f docker-compose.standalone.yml up -d --build
+# HARVEX_DOMAIN is the host name only (harvex.example), APP_ORIGIN the full origin (https://harvex.example).
+# Guide: DOCKER-ID.md. On Coolify use docker-compose.yml alone: Coolify's own proxy does TLS.
+services:
+  caddy:
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    depends_on:
+      harvex:
+        condition: service_healthy
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+      - "${HTTPS_PORT:-443}:443/udp"
+    environment:
+      HARVEX_DOMAIN: ${HARVEX_DOMAIN}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  caddy-data:
+  caddy-config:

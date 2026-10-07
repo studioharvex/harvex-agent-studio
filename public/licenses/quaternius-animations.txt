@@ -1,0 +1,4 @@
+Animation clips in /sim/clips.json and /sim/clips.bin are made from the "Universal Animation Library" (Standard)
+by Quaternius (https://quaternius.com/packs/universalanimationlibrary.html), released under
+CC0 1.0 Universal (https://creativecommons.org/publicdomain/zero/1.0/).
+They were retargeted to the studio's skeleton and stored as per-bone turns by scripts/build-sim-clips.mjs.

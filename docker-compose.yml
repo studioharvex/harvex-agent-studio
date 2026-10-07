@@ -1,0 +1,156 @@
+# Coolify: New Resource → Docker Compose (from this repository). Set the domain of the "harvex" service to
+# https://your-domain:8787 (the :8787 only tells Coolify's proxy the container port; visitors use 443).
+# Fill the variables in Coolify's Environment Variables tab (APP_ORIGIN and BETTER_AUTH_SECRET are required;
+# the container refuses to start without them). Required-variable syntax with an error message is avoided on purpose:
+# Coolify 4.3.x stores the message text as the value.
+# Full guide: COOLIFY-ID.md
+services:
+  harvex:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    expose:
+      - "8787"
+    environment:
+      # required
+      APP_ORIGIN: ${APP_ORIGIN}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      # AI (optional; samples work without it). First match wins: Claude, OpenAI, OpenAI-compatible, gateway.
+      AI_ENABLED: ${AI_ENABLED:-false}
+      # Claude: an Anthropic Console API key (pay per token; a Claude Pro/Max subscription cannot be used here)
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-opus-5-5}
+      ANTHROPIC_EFFORT: ${ANTHROPIC_EFFORT:-medium}
+      ANTHROPIC_MAX_TOKENS: ${ANTHROPIC_MAX_TOKENS:-8000}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-}
+      AI_GATEWAY_URL: ${AI_GATEWAY_URL:-}
+      AI_GATEWAY_KEY: ${AI_GATEWAY_KEY:-}
+      # any OpenAI-compatible API (Gemini, Groq, OpenRouter): base URL, key, model
+      AI_BASE_URL: ${AI_BASE_URL:-}
+      AI_API_KEY: ${AI_API_KEY:-}
+      AI_MODEL: ${AI_MODEL:-}
+      # optional reasoning_effort for that API (Gemini Flash-Lite: minimal/low/medium/high); unset sends nothing
+      AI_REASONING_EFFORT: ${AI_REASONING_EFFORT:-}
+      # google = the research skill uses Gemini Grounding with Google Search (needs the Gemini AI_BASE_URL)
+      AI_WEB_SEARCH: ${AI_WEB_SEARCH:-}
+      # output budget per run for that API, thinking included (default 8000; long translations need several thousand)
+      AI_MAX_TOKENS: ${AI_MAX_TOKENS:-}
+      # runs paid only with free credits use this cheaper model list when set
+      AI_MODEL_FREE: ${AI_MODEL_FREE:-}
+      # usage limits: credits per live AI run, live AI runs per account per UTC day, and for the whole studio per UTC
+      # day (schedules included). Both daily limits are atomic (drizzle/0013) and cannot be switched off.
+      LIVE_RUN_COST: ${LIVE_RUN_COST:-5}
+      # credits for one chat message with an agent (its page, lib/talk.ts); a creator's price comes on top
+      TALK_COST: ${TALK_COST:-3}
+      # credits for one draft of an agent's instructions from its creator's own posts (Studio, lib/voice.ts)
+      VOICE_COST: ${VOICE_COST:-8}
+      # credits for one agent check before publishing (four AI calls, lib/agent-check.ts)
+      CHECK_COST: ${CHECK_COST:-8}
+      # wallet addresses (comma-separated) of the accounts that may confirm a creator's X handle; empty = verification closed
+      CREATOR_ADMINS: ${CREATOR_ADMINS:-}
+      LIVE_DAILY_PER_USER: ${LIVE_DAILY_PER_USER:-50}
+      AI_DAILY_RUNS: ${AI_DAILY_RUNS:-2000}
+      # part of AI_DAILY_RUNS that accounts WITHOUT bought credits may use together (empty = 70%), so free sign-ups can
+      # never use up the day for the people who paid
+      AI_DAILY_FREE_RUNS: ${AI_DAILY_FREE_RUNS:-}
+      # web search is billed per query on top of the tokens: research runs per UTC day that may use it (0 = never), and
+      # whether runs paid only with free credits may use it (false = bought credits only). Past the limit the research
+      # skill still answers, without browsing and saying so.
+      AI_DAILY_SEARCH_RUNS: ${AI_DAILY_SEARCH_RUNS:-150}
+      AI_SEARCH_FREE_CREDITS: ${AI_SEARCH_FREE_CREDITS:-true}
+      # free credits for a new account, and live AI price per skill ("research=12,document=6,..." or flat = LIVE_RUN_COST)
+      STARTING_CREDITS: ${STARTING_CREDITS:-25}
+      LIVE_SKILL_COSTS: ${LIVE_SKILL_COSTS:-}
+      # free credits refill (free part back up to FREE_REFILL_CREDITS every FREE_REFILL_HOURS) and the heavy-skill window
+      FREE_REFILL_CREDITS: ${FREE_REFILL_CREDITS:-25}
+      FREE_REFILL_HOURS: ${FREE_REFILL_HOURS:-24}
+      LIMIT_WINDOW_HOURS: ${LIMIT_WINDOW_HOURS:-5}
+      HEAVY_SKILLS: ${HEAVY_SKILLS:-}
+      FREE_HEAVY_PER_WINDOW: ${FREE_HEAVY_PER_WINDOW:-2}
+      PAID_HEAVY_PER_WINDOW: ${PAID_HEAVY_PER_WINDOW:-20}
+      PLATFORM_FEE_BPS: ${PLATFORM_FEE_BPS:-0}
+      # tries per skill per account for manual runs (0 = no limit: credits and the daily limits below decide)
+      SKILL_TRIAL_LIMIT: ${SKILL_TRIAL_LIMIT:-0}
+      # scheduled agent work: credits per run, schedules per account, scheduled runs per account per day
+      SCHEDULES_ENABLED: ${SCHEDULES_ENABLED:-true}
+      SCHEDULE_RUN_COST: ${SCHEDULE_RUN_COST:-5}
+      SCHEDULE_MAX: ${SCHEDULE_MAX:-3}
+      SCHEDULE_DAILY_RUNS: ${SCHEDULE_DAILY_RUNS:-24}
+      # delivery of scheduled results: Discord webhooks work as is; Telegram needs a bot token from @BotFather
+      NOTIFY_DISCORD: ${NOTIFY_DISCORD:-true}
+      NOTIFY_MAX: ${NOTIFY_MAX:-4}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      # quests: free credits per finished quest, once per account (0 = no credits); QUESTS_ENABLED=false hides the page's list
+      QUESTS_ENABLED: ${QUESTS_ENABLED:-true}
+      QUEST_CREDITS: ${QUEST_CREDITS:-5}
+      # invitations: free credits for each side once the invited account completed a run; rewarded invitations per account
+      REFERRALS_ENABLED: ${REFERRALS_ENABLED:-true}
+      REFERRAL_CREDITS: ${REFERRAL_CREDITS:-10}
+      REFERRAL_MAX: ${REFERRAL_MAX:-20}
+      # holder reward boost for inviters: percent per invited friend who holds a reward unit, and how many friends count
+      # (10 and 5: at most 1.5x; 0 turns it off). This raises what the reward vault pays.
+      REFERRAL_BOOST_PERCENT: ${REFERRAL_BOOST_PERCENT:-10}
+      REFERRAL_BOOST_FRIENDS: ${REFERRAL_BOOST_FRIENDS:-5}
+      # daily SQLite backups kept under /data/backups (0 = off)
+      HARVEX_BACKUP_DAYS: ${HARVEX_BACKUP_DAYS:-7}
+      # BNB Smart Chain (all optional; every chain feature stays OFF while its addresses are empty)
+      CHAIN_NETWORK: ${CHAIN_NETWORK:-testnet}
+      CHAIN_RPC_URL: ${CHAIN_RPC_URL:-}
+      CHAIN_LOGS_RPC_URL: ${CHAIN_LOGS_RPC_URL:-}
+      PAY_TOKEN_ADDRESS: ${PAY_TOKEN_ADDRESS:-}
+      PAY_TOKEN_SYMBOL: ${PAY_TOKEN_SYMBOL:-USDT}
+      PAY_TOKEN_DECIMALS: ${PAY_TOKEN_DECIMALS:-18}
+      TOPUP_TREASURY: ${TOPUP_TREASURY:-}
+      CREDITS_PER_TOKEN: ${CREDITS_PER_TOKEN:-100}
+      TOPUP_FINALITY: ${TOPUP_FINALITY:-safe}
+      TOPUP_MIN_CONFIRMATIONS: ${TOPUP_MIN_CONFIRMATIONS:-3}
+      CLAIMS_ENABLED: ${CLAIMS_ENABLED:-false}
+      CLAIMS_CONTRACT: ${CLAIMS_CONTRACT:-}
+      CLAIM_MIN_CREDITS: ${CLAIM_MIN_CREDITS:-500}
+      CLAIMS_ADMIN_TOKEN: ${CLAIMS_ADMIN_TOKEN:-}
+      HARVEX_TOKEN_ADDRESS: ${HARVEX_TOKEN_ADDRESS:-}
+      TIER_BASE_CREDITS: ${TIER_BASE_CREDITS:-100}
+      # holder rewards (off until the HARVEX token, the reward token and a second HarvexClaims exist)
+      REWARDS_ENABLED: ${REWARDS_ENABLED:-false}
+      REWARD_TOKEN_ADDRESS: ${REWARD_TOKEN_ADDRESS:-}
+      REWARD_TOKEN_SYMBOL: ${REWARD_TOKEN_SYMBOL:-USDT}
+      REWARD_TOKEN_DECIMALS: ${REWARD_TOKEN_DECIMALS:-18}
+      REWARD_CONTRACT: ${REWARD_CONTRACT:-}
+      # fixed rate: every REWARD_HARVEX_PER_UNIT HARVEX held earns REWARD_USD_PER_UNIT_HOUR USD of the reward token per hour,
+      # priced by the Chainlink feed when one is set; hourly periods, built and published automatically (REWARDS-ID.md)
+      REWARD_HARVEX_PER_UNIT: ${REWARD_HARVEX_PER_UNIT:-1500000}
+      REWARD_USD_PER_UNIT_HOUR: ${REWARD_USD_PER_UNIT_HOUR:-0.01}
+      REWARD_PRICE_FEED: ${REWARD_PRICE_FEED:-}
+      REWARD_PRICE_MAX_AGE_HOURS: ${REWARD_PRICE_MAX_AGE_HOURS:-72}
+      REWARD_PERIOD_HOURS: ${REWARD_PERIOD_HOURS:-1}
+      REWARD_START_BLOCK: ${REWARD_START_BLOCK:-0}
+      REWARD_EXCLUDE: ${REWARD_EXCLUDE:-}
+      REWARD_AUTO: ${REWARD_AUTO:-true}
+      # hourly claims: a dedicated key that can ONLY post reward roots (the Safe names it with setRootPoster and sets a
+      # payout limit with setPayoutLimit); empty = only the Safe posts roots
+      REWARD_ROOT_POSTER_KEY: ${REWARD_ROOT_POSTER_KEY:-}
+      # preview.<domain> is noindex automatically; set true/false to override
+      HARVEX_NOINDEX: ${HARVEX_NOINDEX:-}
+      # true ONLY when the server can be reached through Cloudflare alone (orange cloud + firewall): the visitor address
+      # is then taken from Cloudflare's CF-Connecting-IP. Otherwise leave empty: that header is dropped as forgeable.
+      HARVEX_TRUST_CF_HEADERS: ${HARVEX_TRUST_CF_HEADERS:-}
+    # the app needs no Linux capabilities and never gains privileges (it runs as the unprivileged "node" user)
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    # The database lives here: D1 is SQLite inside this container (workerd), stored on this volume under
+    # /data/v3/d1, with daily copies in /data/backups. No separate database service is needed (one container only).
+    volumes:
+      - harvex-data:/data
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8787/api/chain').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+
+volumes:
+  harvex-data:

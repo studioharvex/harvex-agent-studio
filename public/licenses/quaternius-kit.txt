@@ -1,0 +1,5 @@
+Character bodies, hairstyles and their textures in /kit are from the "Universal Base Characters" kit
+by Quaternius (https://quaternius.com/packs/universalbasecharacters.html), released under
+CC0 1.0 Universal (https://creativecommons.org/publicdomain/zero/1.0/).
+They were converted for the web (GLB, WebP) by scripts/build-kit-assets.mjs; outfits, shoes and accessories are
+drawn by the studio's own code.

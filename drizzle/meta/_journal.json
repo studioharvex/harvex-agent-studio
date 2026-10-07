@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1790510710954,
+      "tag": "0000_adorable_william_stryker",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1790511158208,
+      "tag": "0001_needy_justice",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1790612291391,
+      "tag": "0002_paid_agents",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1790619000779,
+      "tag": "0003_auth",
+      "breakpoints": true
+    }
+  ]
+}

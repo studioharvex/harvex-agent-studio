@@ -1,0 +1,96 @@
+HARVEX AGENT STUDIO — INTEGRATION GUIDE
+
+What this file is
+A short technical note for operators who host Harvex themselves. The full guides are in the
+repository (START-HERE-ID.md, DEPLOY-ID.md, COOLIFY-ID.md, DOCKER-ID.md) and in the Docs
+on the site. "harvex.example" in the guides is a placeholder domain: Harvex has no domain yet.
+
+Current product state
+Built and working without any chain setting: character studio (three.js), agent builder,
+ten skills (up to four per agent), workspace storage per account, task history, export /
+import, share links, schedules, the pay-per-run marketplace in preview credits, and
+wallet-only sign-in (Sign-In with Ethereum, EIP-4361, for BNB Smart Chain).
+Built and off until an operator configures it: live AI on a server-side provider, credit
+top-ups in USDT, earnings claims, holder tiers and holder rewards.
+Not deployed: there is no HARVEX token, no claims contract, no reward vault and no multisig,
+and the reward token has not been chosen. Rewards pay nothing. The contracts are not
+audited, there is no legal review, and nothing has been tested on BNB Smart Chain; the
+only tests run on a local chain. Preview credits have no monetary value. Without an AI
+provider every skill returns a labelled workflow sample that does not browse, summarise
+or execute anything.
+
+AI providers (server-side secrets only, never in the browser)
+The server uses the first one that is configured, and only when AI_ENABLED=true:
+1. ANTHROPIC_API_KEY                       Claude (official SDK), web search for research
+2. OPENAI_API_KEY + OPENAI_MODEL           OpenAI Responses API, web search for research
+3. AI_BASE_URL + AI_API_KEY + AI_MODEL     any OpenAI-compatible Chat Completions API
+4. AI_GATEWAY_URL + AI_GATEWAY_KEY         your own gateway (contract below)
+Every live run is debited in credits and counted against per-account and studio-wide daily
+limits that are enforced in the database. A failed run returns its credits. Set a spending
+limit at the provider as well: a timeout does not guarantee that the provider stopped.
+
+Gateway contract
+The server sends POST JSON over HTTPS:
+{
+  "version": 1,
+  "taskId": "UUID",
+  "agent": {"name":"...","personality":"...","tone":"Friendly",
+            "language":"English","skills":["research"]},
+  "skill": "research",
+  "prompt": "User task",
+  "maxOutputTokens": 1800,
+  "allowExternalActions": false
+}
+Headers: Authorization: Bearer <AI_GATEWAY_KEY>, Idempotency-Key: <taskId>
+Expected response: {"output":"Plain text result, including source URLs when used"}
+The request times out after 45 seconds. Redirects are rejected and plain http is refused.
+Output must be nonempty text; at most 40,000 characters are kept. HTML is never rendered.
+
+The gateway must implement the selected skill itself: research retrieves sources, document
+reads the supplied text, write drafts content. It must respect the personality, tone,
+language and output limit, treat pasted documents as untrusted content, and take no
+external actions. Do not present a generic text model as a web-research service.
+When someone else's published agent is run, its instructions must not be revealed in the
+output; the server also withholds an answer that copies them.
+
+Storage and access
+Agents, runs and credit balances live in a D1 (SQLite) database, scoped to the signed-in
+account. API writes require a matching Origin. IDs are random UUIDs. Archiving an agent is
+reversible. Share links carry the agent's configuration in the URL fragment, so never put
+secrets in instructions.
+
+Credits
+New accounts start with free credits (STARTING_CREDITS, default 25). A workflow sample
+costs 5; a live run is priced by skill. The balance can never go below zero: the debit and
+the run are written in one transaction, and reusing a request ID returns the existing
+result without a second debit. Granted and bought credits can never be withdrawn.
+
+Chain
+BNB Smart Chain (mainnet chain id 56, testnet 97). Gas is paid in BNB. Explorers:
+https://bscscan.com and https://testnet.bscscan.com. Addresses come from the server
+environment and are published at /api/chain; nothing is hard-coded in the client. The
+server holds no key that can transfer funds. Token balances are always read by the server
+from the chain, never taken from the browser.
+RPC: set CHAIN_RPC_URL to an RPC provider with archive access. The official public
+endpoints (bsc-dataseed.bnbchain.org, bsc-testnet-dataseed.bnbchain.org) refuse
+eth_getLogs and keep no old state (measured 5 Oct 2026), so holder tiers' monthly
+snapshots, the holder recorder and rewards do not work on them. Transfer logs are read
+from CHAIN_LOGS_RPC_URL, which defaults to CHAIN_RPC_URL.
+Top-ups: the pay token is USDT on BNB Smart Chain, which has 18 decimals, not 6
+(PAY_TOKEN_SYMBOL=USDT and PAY_TOKEN_DECIMALS=18 are the defaults). Mainnet address:
+0x55d398326f99059fF775485246999027B3197955; confirm it on bscscan.com before use. There
+is no official USDT on testnet: scripts/deploy-testnet.mjs deploys the project's own mock
+tokens. With TOPUP_FINALITY=safe (default) a top-up is credited once its block is safe,
+which takes seconds on this chain.
+Holder rewards: off, and the reward token is not chosen (REWARD_TOKEN_ADDRESS can be any
+plain BEP-20; REWARD_TOKEN_SYMBOL and REWARD_TOKEN_DECIMALS must match it).
+Wallets in the sign-in picker: MetaMask, Coinbase Wallet, Trust Wallet, Rabby, OKX Wallet,
+and any installed EIP-6963 wallet.
+
+Characters
+The human characters are rigged models from the Quaternius "Universal Base Characters" kit
+(CC0, see /licenses/quaternius-kit.txt), dressed at runtime by the Harvex engine (three.js);
+the android and the companions are built from primitives. The first-generation GLB models
+are not part of this copy and are not loaded by the app; the licence note of one of them
+(RobotExpressive: Tomas Laulhe / Quaternius, CC0 1.0, modified by Don McCurdy, from the
+three.js examples repository) is still in /licenses/robot.txt.

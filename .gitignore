@@ -1,0 +1,181 @@
+# Harvex Agent Studio: files that must never reach Git.
+# Rule of thumb: secrets, local databases, keys and build output stay on the machine that made them.
+
+# ---------------------------------------------------------------- secrets & local config
+# Worker/dev secrets (BETTER_AUTH_SECRET, API keys, chain admin token). Only the examples are committed.
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
+!.env.compose.example
+# Cloudflare deploy settings (account/database ids); copy deploy.config.example.json instead
+deploy.config.json
+*.pem
+*.key
+
+# ---------------------------------------------------------------- local state (databases, keys)
+# D1/SQLite data, miniflare state, local-chain test keys, the throwaway testnet deployer key
+/.wrangler/
+/.sites-runtime/
+# database backups made with the command in COOLIFY-ID.md
+harvex-data-*.tgz
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+# solc/ganache tools for the local chain tests, if installed inside the repo
+/evm-tools/
+
+# ---------------------------------------------------------------- dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# ---------------------------------------------------------------- build output
+/dist/
+/.next/
+/.vinext/
+/out/
+/build/*
+!/build/sites-vite-plugin.ts
+!/build/sites-vite-plugin.LICENSE
+next-env.d.ts
+*.tsbuildinfo
+# generated documents and single-file pages (docs export, standalone studio, vault/Safe admin pages) and the HTML
+# sources they are built from: none of it is used by the website, all of it stays on the machine that made it
+/exports/
+/standalone/
+/scripts/templates/
+*.html
+
+# ---------------------------------------------------------------- local QA & chain admin tooling
+# End-to-end tests, local-chain harness, test tokens, and the operator's vault/Safe/token tools and guides. The website
+# does not need any of it to build or run. Kept on the developer's machine only: these scripts create throwaway keys,
+# send test transactions and simulate attacks, which reads badly out of context in a public repository.
+/scripts/verify-*.mjs
+/scripts/test-*.mjs
+/scripts/smoke.mjs
+/scripts/local-chain.mjs
+/scripts/deploy-testnet.mjs
+/scripts/build-vault-package.mjs
+/scripts/build-safe-batch.mjs
+/scripts/check-reward-vault.mjs
+/scripts/check-harvex-token.mjs
+/scripts/simulate-vault-mainnet.mjs
+/scripts/rpc-transport.mjs
+/contracts/test/
+/VAULT-MAINNET-ID.md
+/GO-LIVE-HARVEX-ID.md
+/REWARDS-ID.md
+
+# ---------------------------------------------------------------- logs, reports & test output
+# anything a run writes out: logs, QA logs, crash dumps, pid files, test reports, screenshots
+logs/
+log/
+qa-logs*/
+*.log
+*.log.*
+*.out
+*.err
+*.trace
+*.pid
+*.stackdump
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+report.[0-9]*.json
+/coverage
+.nyc_output/
+playwright-report/
+test-results/
+/screenshots/
+# throwaway check scripts
+/.chk*.mjs
+
+# ---------------------------------------------------------------- tools & editors
+.vercel
+/outputs/
+/work/
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.zed/
+*.swp
+
+# ---------------------------------------------------------------- AI assistants & coding agents
+# their folders, settings, instruction files, prompts, transcripts and handoff notes stay on the developer's machine
+.claude*
+CLAUDE*.md
+.codex*
+.gpt*
+.chatgpt/
+.openai/
+.agents/
+AGENTS.md
+AGENT.md
+.cursor*
+.windsurf*
+.continue*
+.cline*
+.roo*
+.kiro/
+.augment*
+.codeium/
+.tabnine/
+.junie/
+.trae/
+.amazonq/
+.goose/
+.opencode/
+.qwen/
+.qodo/
+.specstory/
+.aider*
+.copilot/
+copilot-instructions.md
+.github/copilot-instructions.md
+.github/instructions/
+.github/prompts/
+.gemini/
+GEMINI.md
+QWEN.md
+WARP.md
+.mcp.json
+mcp.json
+.aiignore
+.aiexclude
+.rules
+/prompts/
+*.prompt.md
+PROMPT*.txt
+PROMPT*.md
+/HANDOFF/
+CHANGES-CLAUDE-*
+transcripts/
+graphify-out/
+.graphify/
+
+# ---------------------------------------------------------------- OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------------------------------------------------------------- scraped & third-party content
+# anything fetched from other websites (pages, screenshots, branding dumps) and the notes written from it
+.firecrawl/
+*firecrawl*
+*scrape*
+*scraping*
+scraped/
+crawl/
+crawls/
+crawled/
+*-crawl.*
+/DESIGN.md
+DESIGN-*.md

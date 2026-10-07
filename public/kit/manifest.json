@@ -1,0 +1,297 @@
+{
+ "source": "Universal Base Characters by Quaternius, CC0 1.0 (https://quaternius.com/packs/universalbasecharacters.html)",
+ "bodies": {
+  "superhero-male": {
+   "file": "superhero-male.glb",
+   "type": "superhero",
+   "sex": "m",
+   "tones": {
+    "dark": "superhero-male-dark.webp",
+    "light": "superhero-male-light.webp"
+   },
+   "ref": {
+    "dark": [
+     0.6515,
+     0.452,
+     0.3147
+    ],
+    "light": [
+     0.6538,
+     0.4538,
+     0.316
+    ]
+   },
+   "crown": 1.8101,
+   "eye": [
+    0.0487,
+    1.6986,
+    0.0806
+   ],
+   "brows": "1",
+   "normal": "superhero-male-normal.webp",
+   "rough": "superhero-male-rough.webp"
+  },
+  "superhero-female": {
+   "file": "superhero-female.glb",
+   "type": "superhero",
+   "sex": "f",
+   "tones": {
+    "dark": "superhero-female-dark.webp",
+    "light": "superhero-female-light.webp"
+   },
+   "ref": {
+    "dark": [
+     0.6624,
+     0.4633,
+     0.3209
+    ],
+    "light": [
+     0.6662,
+     0.4659,
+     0.3227
+    ]
+   },
+   "crown": 1.7666,
+   "eye": [
+    0.0511,
+    1.656,
+    0.0753
+   ],
+   "brows": "2",
+   "normal": "superhero-female-normal.webp",
+   "rough": "superhero-female-rough.webp"
+  }
+ },
+ "hair": {
+  "Buns": {
+   "file": "hair-buns.glb",
+   "tex": "2",
+   "on": "superhero-female"
+  },
+  "Long": {
+   "file": "hair-long.glb",
+   "tex": "2",
+   "on": "superhero-female"
+  },
+  "Beard": {
+   "file": "hair-beard.glb",
+   "tex": "1",
+   "on": "superhero-male"
+  },
+  "Buzzed": {
+   "file": "hair-buzzed.glb",
+   "tex": "1",
+   "on": "superhero-male"
+  },
+  "Eyebrows_Female": {
+   "file": "eyebrows-female.glb",
+   "tex": "2",
+   "on": "superhero-female"
+  },
+  "Eyebrows_Regular": {
+   "file": "eyebrows-regular.glb",
+   "tex": "1",
+   "on": "superhero-male"
+  },
+  "BuzzedFemale": {
+   "file": "hair-buzzedfemale.glb",
+   "tex": "1",
+   "on": "superhero-female"
+  },
+  "SimpleParted": {
+   "file": "hair-simpleparted.glb",
+   "tex": "1",
+   "on": "superhero-male"
+  }
+ },
+ "textures": {
+  "hair2": "hair2.webp",
+  "hair2n": "hair2-normal.webp",
+  "hair1": "hair1.webp",
+  "hair1n": "hair1-normal.webp",
+  "eye": "eye.webp",
+  "eyen": "eye-normal.webp"
+ },
+ "fist": {
+  "index_01_l": [
+   0.4452,
+   0.5494,
+   -0.4452,
+   0.5494
+  ],
+  "index_02_l": [
+   0.6233,
+   0,
+   0,
+   0.7819
+  ],
+  "index_03_l": [
+   0.6233,
+   0,
+   0,
+   0.7819
+  ],
+  "middle_01_l": [
+   0.4321,
+   0.5387,
+   -0.458,
+   0.5597
+  ],
+  "middle_02_l": [
+   0.6233,
+   0.0009,
+   0.0012,
+   0.7819
+  ],
+  "middle_03_l": [
+   0.6233,
+   -0.0007,
+   -0.0009,
+   0.7819
+  ],
+  "pinky_01_l": [
+   0.5041,
+   0.5115,
+   -0.4352,
+   0.543
+  ],
+  "pinky_02_l": [
+   0.6232,
+   -0.0201,
+   0.0149,
+   0.7817
+  ],
+  "pinky_03_l": [
+   0.6233,
+   0.0004,
+   0.0005,
+   0.7819
+  ],
+  "ring_01_l": [
+   0.4353,
+   0.5414,
+   -0.4549,
+   0.5572
+  ],
+  "ring_02_l": [
+   0.6233,
+   0,
+   0,
+   0.7819
+  ],
+  "ring_03_l": [
+   0.6233,
+   -0.0007,
+   -0.0008,
+   0.7819
+  ],
+  "thumb_01_l": [
+   0.2908,
+   0.9496,
+   0.1146,
+   0.0212
+  ],
+  "thumb_02_l": [
+   0.2194,
+   0.0238,
+   -0.0053,
+   0.9753
+  ],
+  "thumb_03_l": [
+   0.6874,
+   -0.0003,
+   -0.0004,
+   0.7263
+  ],
+  "index_01_r": [
+   0.4452,
+   -0.5494,
+   0.4452,
+   0.5494
+  ],
+  "index_02_r": [
+   0.6233,
+   0,
+   0,
+   0.7819
+  ],
+  "index_03_r": [
+   0.6233,
+   0,
+   0,
+   0.7819
+  ],
+  "middle_01_r": [
+   0.4321,
+   -0.5387,
+   0.458,
+   0.5597
+  ],
+  "middle_02_r": [
+   0.6233,
+   -0.0009,
+   -0.0012,
+   0.7819
+  ],
+  "middle_03_r": [
+   0.6233,
+   0.0007,
+   0.0009,
+   0.7819
+  ],
+  "pinky_01_r": [
+   0.5041,
+   -0.5115,
+   0.4352,
+   0.543
+  ],
+  "pinky_02_r": [
+   0.6232,
+   0.0201,
+   -0.0149,
+   0.7817
+  ],
+  "pinky_03_r": [
+   0.6233,
+   -0.0004,
+   -0.0005,
+   0.7819
+  ],
+  "ring_01_r": [
+   0.4353,
+   -0.5414,
+   0.4549,
+   0.5572
+  ],
+  "ring_02_r": [
+   0.6233,
+   0,
+   0,
+   0.7819
+  ],
+  "ring_03_r": [
+   0.6233,
+   0.0007,
+   0.0008,
+   0.7819
+  ],
+  "thumb_01_r": [
+   0.2908,
+   -0.9496,
+   -0.1146,
+   0.0212
+  ],
+  "thumb_02_r": [
+   0.2194,
+   -0.0238,
+   0.0053,
+   0.9753
+  ],
+  "thumb_03_r": [
+   0.6874,
+   0.0003,
+   0.0004,
+   0.7263
+  ]
+ }
+}

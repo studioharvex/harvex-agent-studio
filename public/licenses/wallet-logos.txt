@@ -1,0 +1,13 @@
+# Wallet logos (public/wallets/*)
+
+Every file is the wallet's own published icon, taken unchanged from the vendor on 30 September 2026:
+
+metamask.svg   Consensys / MetaMask: app/images/logo/metamask-fox-bg.svg in https://github.com/MetaMask/metamask-extension
+coinbase.svg   Coinbase: walletLogo('standard') in packages/wallet-sdk/src/assets/wallet-logo.ts,
+               https://github.com/coinbase/coinbase-wallet-sdk (data URI decoded to a file, size set to 1024)
+rabby.png      DeBank / RabbyHub: _raw/images/rabby-site-logo.png in https://github.com/RabbyHub/Rabby
+okx.png        OKX: apple-touch-icon of the OKX Wallet site, https://web3.okx.com/cdn/assets/imgs/254/43DEFFE88CCA0D7C.png
+trust.svg      Trust Wallet: https://trustwallet.com/icon.svg (linked from https://trustwallet.com/press)
+
+The logos are trademarks of their owners. Harvex shows them only to identify each wallet in the connect-wallet picker;
+this does not imply endorsement. Installed wallets show the icon they announce themselves (EIP-6963) instead.

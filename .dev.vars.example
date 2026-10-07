@@ -1,0 +1,21 @@
+AUTH_TRUST_SITES_HEADERS=true
+# Better Auth: 32+ random characters. Generate: node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
+BETTER_AUTH_SECRET=
+# Tries per skill per account (default 2). The repeat-run tests (verify-market, verify-chain) need 0 = unlimited.
+SKILL_TRIAL_LIMIT=0
+# Scheduler: token for /api/schedules/tick (32+ chars). The test clock lets verify-schedules jump in time: LOCAL ONLY.
+# SCHEDULER_TOKEN=
+# SCHEDULER_TEST_CLOCK=true
+# BNB Smart Chain features stay OFF while these are empty. For a local test chain run
+# scripts/local-chain.mjs and paste the lines it prints (see START-HERE-ID.md). Never put a private key here.
+# CHAIN_NETWORK=testnet
+# CHAIN_RPC_URL=
+# PAY_TOKEN_ADDRESS=
+# TOPUP_TREASURY=
+# CLAIMS_ENABLED=false
+# CLAIMS_CONTRACT=
+# CLAIMS_ADMIN_TOKEN=
+# HARVEX_TOKEN_ADDRESS=
+# Parts that are not open yet (lib/gate.ts): chain, app, community, signin, separated by commas, or "all".
+# Their pages show a "not open yet" page and their API routes answer 403. Empty = everything is open.
+# CLOSED_SECTIONS=chain,app,community,signin

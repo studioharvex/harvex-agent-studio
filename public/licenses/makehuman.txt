@@ -1,0 +1,9 @@
+Parametric humans in /sim (the base mesh, its morph targets, the skeleton and bone weights, skins, eyes, eyebrows,
+eyelashes, teeth, hair, clothes and shoes) are made from MakeHuman assets:
+  - base mesh hm08, targets and the "game engine" rig: the data folder of MPFB2
+    (https://github.com/makehumancommunity/mpfb2), assets released under CC0 1.0;
+  - the MakeHuman system asset pack (makehuman_system_assets_cc0.zip from https://files.makehumancommunity.org),
+    released under CC0 1.0 Universal (https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright holders at the release to CC0 (September 2020): Data Collection AB, Joel Palmius, Jonas Hauquier.
+MakeHuman is a trademark of its owners; Harvex is not affiliated with or endorsed by the MakeHuman project.
+The files were converted for the web (binary packs, WebP pictures) by scripts/build-sim-assets.mjs.

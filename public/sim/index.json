@@ -1,0 +1,649 @@
+{
+ "pieces": {
+  "hair": {
+   "afro01": {
+    "tris": 2192,
+    "kb": 59,
+    "thumb": "hair-afro01.webp"
+   },
+   "bob01": {
+    "tris": 8474,
+    "kb": 187,
+    "thumb": "hair-bob01.webp"
+   },
+   "bob02": {
+    "tris": 2248,
+    "kb": 65,
+    "thumb": "hair-bob02.webp"
+   },
+   "braid01": {
+    "tris": 5518,
+    "kb": 152,
+    "thumb": "hair-braid01.webp"
+   },
+   "long01": {
+    "tris": 4108,
+    "kb": 111,
+    "thumb": "hair-long01.webp"
+   },
+   "ponytail01": {
+    "tris": 5352,
+    "kb": 133,
+    "thumb": "hair-ponytail01.webp"
+   },
+   "short01": {
+    "tris": 3678,
+    "kb": 110,
+    "thumb": "hair-short01.webp"
+   },
+   "short02": {
+    "tris": 3344,
+    "kb": 74,
+    "thumb": "hair-short02.webp"
+   },
+   "short03": {
+    "tris": 1922,
+    "kb": 43,
+    "thumb": "hair-short03.webp"
+   },
+   "short04": {
+    "tris": 1050,
+    "kb": 33,
+    "thumb": "hair-short04.webp"
+   }
+  },
+  "brows": {
+   "eyebrow001": {
+    "tris": 192,
+    "kb": 4,
+    "thumb": "brows-eyebrow001.webp"
+   },
+   "eyebrow002": {
+    "tris": 192,
+    "kb": 4,
+    "thumb": "brows-eyebrow002.webp"
+   },
+   "eyebrow003": {
+    "tris": 192,
+    "kb": 4,
+    "thumb": "brows-eyebrow003.webp"
+   },
+   "eyebrow004": {
+    "tris": 192,
+    "kb": 4,
+    "thumb": "brows-eyebrow004.webp"
+   },
+   "eyebrow005": {
+    "tris": 192,
+    "kb": 4,
+    "thumb": "brows-eyebrow005.webp"
+   },
+   "eyebrow006": {
+    "tris": 192,
+    "kb": 4,
+    "thumb": "brows-eyebrow006.webp"
+   },
+   "eyebrow007": {
+    "tris": 192,
+    "kb": 4,
+    "thumb": "brows-eyebrow007.webp"
+   },
+   "eyebrow008": {
+    "tris": 192,
+    "kb": 4,
+    "thumb": "brows-eyebrow008.webp"
+   },
+   "eyebrow009": {
+    "tris": 192,
+    "kb": 4,
+    "thumb": "brows-eyebrow009.webp"
+   },
+   "eyebrow010": {
+    "tris": 192,
+    "kb": 4,
+    "thumb": "brows-eyebrow010.webp"
+   },
+   "eyebrow011": {
+    "tris": 192,
+    "kb": 4,
+    "thumb": "brows-eyebrow011.webp"
+   },
+   "eyebrow012": {
+    "tris": 192,
+    "kb": 4,
+    "thumb": "brows-eyebrow012.webp"
+   }
+  },
+  "lashes": {
+   "eyelashes01": {
+    "tris": 368,
+    "kb": 4
+   },
+   "eyelashes02": {
+    "tris": 368,
+    "kb": 5
+   },
+   "eyelashes03": {
+    "tris": 368,
+    "kb": 6
+   },
+   "eyelashes04": {
+    "tris": 368,
+    "kb": 6
+   }
+  },
+  "eyes": {
+   "high": {
+    "tris": 2040,
+    "kb": 33
+   }
+  },
+  "teeth": {
+   "base": {
+    "tris": 7120,
+    "kb": 120
+   }
+  },
+  "hat": {
+   "fedora01": {
+    "tris": 1244,
+    "kb": 27,
+    "thumb": "hat-fedora01.webp"
+   },
+   "fedora_cocked": {
+    "tris": 1244,
+    "kb": 27,
+    "thumb": "hat-fedora_cocked.webp"
+   }
+  },
+  "outfit": {
+   "female_casualsuit01": {
+    "tris": 4236,
+    "kb": 93,
+    "thumb": "outfit-female_casualsuit01.webp"
+   },
+   "female_casualsuit02": {
+    "tris": 5488,
+    "kb": 116,
+    "thumb": "outfit-female_casualsuit02.webp"
+   },
+   "female_elegantsuit01": {
+    "tris": 4192,
+    "kb": 89,
+    "thumb": "outfit-female_elegantsuit01.webp"
+   },
+   "female_sportsuit01": {
+    "tris": 3436,
+    "kb": 76,
+    "thumb": "outfit-female_sportsuit01.webp"
+   },
+   "male_casualsuit01": {
+    "tris": 16672,
+    "kb": 334,
+    "thumb": "outfit-male_casualsuit01.webp"
+   },
+   "male_casualsuit02": {
+    "tris": 4120,
+    "kb": 85,
+    "thumb": "outfit-male_casualsuit02.webp"
+   },
+   "male_casualsuit03": {
+    "tris": 4800,
+    "kb": 107,
+    "thumb": "outfit-male_casualsuit03.webp"
+   },
+   "male_casualsuit04": {
+    "tris": 3240,
+    "kb": 69,
+    "thumb": "outfit-male_casualsuit04.webp"
+   },
+   "male_casualsuit05": {
+    "tris": 5996,
+    "kb": 128,
+    "thumb": "outfit-male_casualsuit05.webp"
+   },
+   "male_casualsuit06": {
+    "tris": 7168,
+    "kb": 154,
+    "thumb": "outfit-male_casualsuit06.webp"
+   },
+   "male_elegantsuit01": {
+    "tris": 14956,
+    "kb": 309,
+    "thumb": "outfit-male_elegantsuit01.webp"
+   },
+   "male_worksuit01": {
+    "tris": 6986,
+    "kb": 155,
+    "thumb": "outfit-male_worksuit01.webp"
+   }
+  },
+  "shoes": {
+   "shoes01": {
+    "tris": 3320,
+    "kb": 50,
+    "thumb": "shoes-shoes01.webp"
+   },
+   "shoes02": {
+    "tris": 3064,
+    "kb": 47,
+    "thumb": "shoes-shoes02.webp"
+   },
+   "shoes03": {
+    "tris": 4128,
+    "kb": 64,
+    "thumb": "shoes-shoes03.webp"
+   },
+   "shoes04": {
+    "tris": 3320,
+    "kb": 50,
+    "thumb": "shoes-shoes04.webp"
+   },
+   "shoes05": {
+    "tris": 3064,
+    "kb": 47,
+    "thumb": "shoes-shoes05.webp"
+   },
+   "shoes06": {
+    "tris": 3064,
+    "kb": 47,
+    "thumb": "shoes-shoes06.webp"
+   }
+  }
+ },
+ "skins": {
+  "middleage_african_female": {
+   "file": "skin-middleage_african_female.webp",
+   "ref": [
+    0.4073,
+    0.2313,
+    0.1638
+   ]
+  },
+  "middleage_african_male": {
+   "file": "skin-middleage_african_male.webp",
+   "ref": [
+    0.3733,
+    0.2328,
+    0.1631
+   ]
+  },
+  "middleage_asian_female": {
+   "file": "skin-middleage_asian_female.webp",
+   "ref": [
+    0.8336,
+    0.658,
+    0.5422
+   ]
+  },
+  "middleage_asian_male": {
+   "file": "skin-middleage_asian_male.webp",
+   "ref": [
+    0.818,
+    0.6389,
+    0.5261
+   ]
+  },
+  "middleage_caucasian_female": {
+   "file": "skin-middleage_caucasian_female.webp",
+   "ref": [
+    0.805,
+    0.6292,
+    0.5224
+   ]
+  },
+  "middleage_caucasian_male": {
+   "file": "skin-middleage_caucasian_male.webp",
+   "ref": [
+    0.8054,
+    0.6262,
+    0.5158
+   ]
+  },
+  "old_african_female": {
+   "file": "skin-old_african_female.webp",
+   "ref": [
+    0.3984,
+    0.1761,
+    0.1018
+   ]
+  },
+  "old_african_male": {
+   "file": "skin-old_african_male.webp",
+   "ref": [
+    0.4078,
+    0.2302,
+    0.141
+   ]
+  },
+  "old_asian_female": {
+   "file": "skin-old_asian_female.webp",
+   "ref": [
+    0.782,
+    0.563,
+    0.4286
+   ]
+  },
+  "old_asian_male": {
+   "file": "skin-old_asian_male.webp",
+   "ref": [
+    0.7348,
+    0.493,
+    0.3613
+   ]
+  },
+  "old_caucasian_female": {
+   "file": "skin-old_caucasian_female.webp",
+   "ref": [
+    0.8269,
+    0.6731,
+    0.5821
+   ]
+  },
+  "old_caucasian_male": {
+   "file": "skin-old_caucasian_male.webp",
+   "ref": [
+    0.883,
+    0.695,
+    0.5585
+   ]
+  },
+  "young_african_female": {
+   "file": "skin-young_african_female.webp",
+   "ref": [
+    0.4031,
+    0.2343,
+    0.1694
+   ]
+  },
+  "young_african_male": {
+   "file": "skin-young_african_male.webp",
+   "ref": [
+    0.3521,
+    0.2273,
+    0.1636
+   ]
+  },
+  "young_asian_female": {
+   "file": "skin-young_asian_female.webp",
+   "ref": [
+    0.8106,
+    0.6183,
+    0.494
+   ]
+  },
+  "young_asian_male": {
+   "file": "skin-young_asian_male.webp",
+   "ref": [
+    0.7815,
+    0.6095,
+    0.5082
+   ]
+  },
+  "young_caucasian_female": {
+   "file": "skin-young_caucasian_female.webp",
+   "ref": [
+    0.8088,
+    0.6199,
+    0.513
+   ]
+  },
+  "young_caucasian_female2": {
+   "file": "skin-young_caucasian_female2.webp",
+   "ref": [
+    0.8036,
+    0.6017,
+    0.4987
+   ]
+  },
+  "young_caucasian_male": {
+   "file": "skin-young_caucasian_male.webp",
+   "ref": [
+    0.8774,
+    0.6609,
+    0.5367
+   ]
+  },
+  "young_caucasian_male2": {
+   "file": "skin-young_caucasian_male2.webp",
+   "ref": [
+    0.7814,
+    0.6094,
+    0.5031
+   ]
+  }
+ },
+ "eyes": {
+  "bluegreen": "eye-bluegreen.webp",
+  "blue": "eye-blue.webp",
+  "brownlight": "eye-brownlight.webp",
+  "brown": "eye-brown.webp",
+  "deepblue": "eye-deepblue.webp",
+  "green": "eye-green.webp",
+  "grey": "eye-grey.webp",
+  "ice": "eye-ice.webp",
+  "lightblue": "eye-lightblue.webp"
+ },
+ "sliders": [
+  {
+   "id": "shoulders",
+   "group": "body",
+   "label": "Shoulders"
+  },
+  {
+   "id": "vshape",
+   "group": "body",
+   "label": "Chest"
+  },
+  {
+   "id": "waist",
+   "group": "body",
+   "label": "Waist"
+  },
+  {
+   "id": "hips",
+   "group": "body",
+   "label": "Hips"
+  },
+  {
+   "id": "belly",
+   "group": "body",
+   "label": "Belly"
+  },
+  {
+   "id": "butt",
+   "group": "body",
+   "label": "Seat"
+  },
+  {
+   "id": "thighs",
+   "group": "body",
+   "label": "Thighs"
+  },
+  {
+   "id": "calves",
+   "group": "body",
+   "label": "Calves"
+  },
+  {
+   "id": "arms",
+   "group": "body",
+   "label": "Arms"
+  },
+  {
+   "id": "legs",
+   "group": "body",
+   "label": "Leg length"
+  },
+  {
+   "id": "neck",
+   "group": "body",
+   "label": "Neck"
+  },
+  {
+   "id": "headWidth",
+   "group": "head",
+   "label": "Head width"
+  },
+  {
+   "id": "headHeight",
+   "group": "head",
+   "label": "Head height"
+  },
+  {
+   "id": "headDepth",
+   "group": "head",
+   "label": "Head depth"
+  },
+  {
+   "id": "headAge",
+   "group": "head",
+   "label": "Face age"
+  },
+  {
+   "id": "faceFat",
+   "group": "head",
+   "label": "Fullness"
+  },
+  {
+   "id": "forehead",
+   "group": "head",
+   "label": "Forehead"
+  },
+  {
+   "id": "ears",
+   "group": "head",
+   "label": "Ear size"
+  },
+  {
+   "id": "earWing",
+   "group": "head",
+   "label": "Ear angle"
+  },
+  {
+   "id": "eyeSize",
+   "group": "eyes",
+   "label": "Eye size"
+  },
+  {
+   "id": "eyeSpace",
+   "group": "eyes",
+   "label": "Eye spacing"
+  },
+  {
+   "id": "eyeHeight",
+   "group": "eyes",
+   "label": "Eye height"
+  },
+  {
+   "id": "eyeSlant",
+   "group": "eyes",
+   "label": "Eye slant"
+  },
+  {
+   "id": "eyeOpen",
+   "group": "eyes",
+   "label": "Eye opening"
+  },
+  {
+   "id": "browHeight",
+   "group": "eyes",
+   "label": "Brow height"
+  },
+  {
+   "id": "browAngle",
+   "group": "eyes",
+   "label": "Brow angle"
+  },
+  {
+   "id": "noseWidth",
+   "group": "nose",
+   "label": "Nose width"
+  },
+  {
+   "id": "noseLength",
+   "group": "nose",
+   "label": "Nose length"
+  },
+  {
+   "id": "noseDepth",
+   "group": "nose",
+   "label": "Nose depth"
+  },
+  {
+   "id": "noseTip",
+   "group": "nose",
+   "label": "Nose tip"
+  },
+  {
+   "id": "noseBridge",
+   "group": "nose",
+   "label": "Bridge"
+  },
+  {
+   "id": "nostrils",
+   "group": "nose",
+   "label": "Nostrils"
+  },
+  {
+   "id": "mouthWidth",
+   "group": "mouth",
+   "label": "Mouth width"
+  },
+  {
+   "id": "lipUpper",
+   "group": "mouth",
+   "label": "Upper lip"
+  },
+  {
+   "id": "lipLower",
+   "group": "mouth",
+   "label": "Lower lip"
+  },
+  {
+   "id": "mouthCorners",
+   "group": "mouth",
+   "label": "Mouth corners"
+  },
+  {
+   "id": "mouthHeight",
+   "group": "mouth",
+   "label": "Mouth height"
+  },
+  {
+   "id": "chinWidth",
+   "group": "jaw",
+   "label": "Chin width"
+  },
+  {
+   "id": "chinHeight",
+   "group": "jaw",
+   "label": "Chin height"
+  },
+  {
+   "id": "chinForward",
+   "group": "jaw",
+   "label": "Chin depth"
+  },
+  {
+   "id": "jaw",
+   "group": "jaw",
+   "label": "Jaw"
+  },
+  {
+   "id": "jawDrop",
+   "group": "jaw",
+   "label": "Jaw drop"
+  },
+  {
+   "id": "cheeks",
+   "group": "jaw",
+   "label": "Cheeks"
+  },
+  {
+   "id": "cheekbones",
+   "group": "jaw",
+   "label": "Cheekbones"
+  }
+ ]
+}

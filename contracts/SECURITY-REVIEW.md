@@ -72,7 +72,7 @@ Results from the earlier work; not re-run for this copy.
 ## Addendum: second instance as the holder-reward vault
 
 Scope: the same contract deployed a second time with `token` = the reward token, fed by the fixed-rate calculator in
-`lib/rewards.ts` (default: every 1,500,000 HARVEX earns $0.01 of the reward token per hour). No contract change. The
+`lib/rewards.ts` (default: every 3,000,000 HARVEX earns $0.01 of the reward token per hour). No contract change. The
 reward token of this project has not been chosen, so the token-specific notes of the original addendum (they described
 one particular token on the earlier chain) have been removed.
 

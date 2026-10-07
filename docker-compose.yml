@@ -16,6 +16,8 @@ services:
       # required
       APP_ORIGIN: ${APP_ORIGIN}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      # parts that are not open yet: chain, app, community, signin (comma-separated) or all; empty = everything is open
+      CLOSED_SECTIONS: ${CLOSED_SECTIONS:-}
       # AI (optional; samples work without it). First match wins: Claude, OpenAI, OpenAI-compatible, gateway.
       AI_ENABLED: ${AI_ENABLED:-false}
       # Claude: an Anthropic Console API key (pay per token; a Claude Pro/Max subscription cannot be used here)
@@ -120,7 +122,7 @@ services:
       REWARD_CONTRACT: ${REWARD_CONTRACT:-}
       # fixed rate: every REWARD_HARVEX_PER_UNIT HARVEX held earns REWARD_USD_PER_UNIT_HOUR USD of the reward token per hour,
       # priced by the Chainlink feed when one is set; hourly periods, built and published automatically (REWARDS-ID.md)
-      REWARD_HARVEX_PER_UNIT: ${REWARD_HARVEX_PER_UNIT:-1500000}
+      REWARD_HARVEX_PER_UNIT: ${REWARD_HARVEX_PER_UNIT:-3000000}
       REWARD_USD_PER_UNIT_HOUR: ${REWARD_USD_PER_UNIT_HOUR:-0.01}
       REWARD_PRICE_FEED: ${REWARD_PRICE_FEED:-}
       REWARD_PRICE_MAX_AGE_HOURS: ${REWARD_PRICE_MAX_AGE_HOURS:-72}

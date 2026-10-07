@@ -63,10 +63,11 @@ export function ToneIcon({icon,tone,className}:{icon:string;tone:Tone;className?
  return <span className={cn('grid size-9 shrink-0 place-items-center rounded-lg [&_svg]:size-[18px]',TINT_BG[tone],TONE_TEXT[tone],className)}><I id={icon}/></span>;
 }
 
-/** The logo stands bare on the page (no chip, no border, no shadow) and is one colour, so it takes black or white
-    from what lies under it: a dark band, the yellow stage, a coloured frame. null = the page's own text colour
-    (phones, where the top bar is solid, and before the first look). `dep` = look again when it changes. */
-function useLightUnder(ref:RefObject<HTMLElement|null>,dep:unknown){
+/** The logo stands bare on the page (no chip, no border, no shadow) and is yellow. This looks at what lies under it
+    and answers true when that is itself yellow (the hero's stage, a yellow frame): there the logo turns black.
+    false = anything else, null = not looked yet or a phone (the top bar is solid there). `dep` = look again when
+    it changes. */
+function useYellowUnder(ref:RefObject<HTMLElement|null>,dep:unknown){
  const [light,setLight]=useState<boolean|null>(null);
  useEffect(()=>{
   const read=()=>{
@@ -76,9 +77,10 @@ function useLightUnder(ref:RefObject<HTMLElement|null>,dep:unknown){
    for(let n:Element|null=hit||document.body;n;n=n.parentElement){
     const c=getComputedStyle(n).backgroundColor,m=(c.match(/[\d.]+/g)||[]).map(Number);
     if(m.length<3||(m.length>3&&m[3]<.5))continue;
-    // rgb(): 0..255; color(srgb ...): 0..1; oklab()/oklch(): lightness first
-    const lum=c.startsWith('okl')?m[0]**3:(.2126*m[0]+.7152*m[1]+.0722*m[2])/(c.startsWith('rgb')?255:1);
-    setLight(lum<.42);return;
+    // rgb(): 0..255; color(srgb ...): 0..1; oklch(): lightness, chroma, hue. Yellow = much red and green, little blue.
+    const k=c.startsWith('rgb')?255:1;
+    // (the pale yellow of the cards on the stage counts too: blue clearly under red and green)
+    setLight(c.startsWith('oklch')?m[0]>.8&&m[1]>.06&&m[2]>85&&m[2]<115:!c.startsWith('okl')&&m[0]/k>.6&&m[1]/k>.6&&Math.min(m[0],m[1])/k-m[2]/k>.08);return;
    }
    setLight(null);
   };
@@ -98,12 +100,13 @@ export function ThemeButton({className}:{className?:string}){
 }
 
 /* The Harvex lockup: the split H mark and the lowercase wordmark (Outfit Bold drawn as outlines, so no font loads).
-   One colour: the text colour of the place it stands in. The mark alone is public/harvex-icon.svg; the pictures that
+   One colour: the brand yellow, everywhere (user, 7 Oct 2026: "make the logo yellow, in the navbar and everywhere");
+   only on a yellow surface it turns black, because yellow on yellow is no logo. The mark alone is public/harvex-icon.svg; the pictures that
    carry the logo are drawn by scripts/build-brand-images.mjs, which has its own copy of the mark. */
 export const LOGO_MARK='M17 20L45 20L41.18 38L62.18 38L49.08 62L36.08 62L28 100L0 100ZM81.26 0L109.26 0L92.25 80L64.25 80L68.08 62L55.08 62L68.18 38L73.18 38Z';
 const LOGO_WORD='M72.7 100L51.7 100L51.7 61.8Q51.7 56.6 48.4 53.4Q45.2 50.1 40.2 50.1L40.2 50.1Q36.8 50.1 34.2 51.6Q31.5 53.0 30.0 55.7Q28.5 58.4 28.5 61.8L28.5 61.8L28.5 100L7.4 100L7.4 0L28.5 0L28.5 38.0Q30.4 36.2 32.9 34.8L32.9 34.8Q38.8 31.7 46.6 31.7L46.6 31.7Q54.4 31.7 60.3 34.9Q66.3 38.2 69.5 43.9Q72.7 49.6 72.7 57.2L72.7 57.2L72.7 100ZM112.1 101.4L112.1 101.4Q102.9 101.4 95.7 96.8Q88.4 92.3 84.2 84.4Q80.0 76.6 80.0 66.5Q80.0 56.5 84.2 48.6Q88.4 40.8 95.7 36.2Q102.9 31.7 112.1 31.7L112.1 31.7Q118.9 31.7 124.4 34.3L124.4 34.3Q127.8 36.0 130.6 38.6L130.6 38.6L130.6 33.1L151.2 33.1L151.2 100L130.6 100L130.6 94.6Q128.0 97.1 124.4 98.8L124.4 98.8Q118.9 101.4 112.1 101.4ZM116.4 82.4L116.4 82.4Q123.1 82.4 127.3 77.9Q131.4 73.4 131.4 66.5L131.4 66.5Q131.4 61.8 129.5 58.3Q127.7 54.7 124.3 52.7Q120.9 50.7 116.5 50.7Q112.1 50.7 108.7 52.7Q105.4 54.7 103.4 58.3Q101.4 61.8 101.4 66.5L101.4 66.5Q101.4 71.1 103.3 74.7Q105.2 78.2 108.7 80.3Q112.1 82.4 116.4 82.4ZM185.1 100L164.0 100L164.0 33.1L185.1 33.1L185.1 38.2Q191.3 31.7 202.3 31.7L202.3 31.7Q207.2 31.7 210.8 33.1Q214.5 34.6 217.2 37.6L217.2 37.6L204.7 53.4Q203.3 51.9 201.2 51.1Q199.2 50.3 196.6 50.3L196.6 50.3Q191.3 50.3 188.2 53.5Q185.1 56.7 185.1 63.2L185.1 63.2L185.1 100ZM258.3 100L241.3 100L212.9 33.1L235.7 33.1L250.0 74.5L264.3 33.1L286.6 33.1L258.3 100ZM323.4 101.5L323.4 101.5Q312.5 101.5 304.1 97.0Q295.6 92.6 290.8 84.6Q286.0 76.6 286.0 66.5Q286.0 56.5 290.7 48.6Q295.5 40.6 303.6 36.1Q311.7 31.5 321.9 31.5L321.9 31.5Q331.8 31.5 339.4 35.8Q347.0 40.1 351.3 47.7Q355.6 55.2 355.6 65.0L355.6 65.0Q355.6 66.8 355.4 68.8Q355.2 70.8 354.7 73.4L354.7 73.4L306.7 73.6Q307.2 75.1 308.0 76.4L308.0 76.4Q310.1 80.7 314.0 83.0Q317.9 85.3 323.3 85.3L323.3 85.3Q328.2 85.3 332.2 83.5Q336.2 81.8 339.3 78.4L339.3 78.4L350.8 89.9Q345.9 95.7 338.8 98.6Q331.8 101.5 323.4 101.5ZM306.7 59.1L306.7 59.1L336.0 59.0Q335.5 57.0 334.8 55.4L334.8 55.4Q333.2 51.7 330.0 49.7Q326.7 47.7 322.0 47.7L322.0 47.7Q317.1 47.7 313.4 49.9Q309.8 52.2 307.9 56.3L307.9 56.3Q307.2 57.6 306.7 59.1ZM427.8 100L403.4 100L391.0 80.0L378.2 100L355.2 100L379.2 65.8L356.5 33.1L381.1 33.1L392.3 51.2L403.6 33.1L426.4 33.1L404.1 65.4L427.8 100Z';
 export function Logo({onClick,className}:{onClick?:()=>void;className?:string}){
- return <button onClick={onClick} aria-label="Harvex home" className={cn('flex items-center text-foreground',className)}>
+ return <button onClick={onClick} aria-label="Harvex home" className={cn('flex items-center text-lime',className)}>
   <svg viewBox="0 -1 560 103" className="h-6 w-auto max-[820px]:h-[22px]" fill="currentColor" aria-hidden="true"><path d={LOGO_MARK}/><path d={LOGO_WORD} transform="translate(131.8 0)"/></svg>
  </button>;
 }
@@ -137,7 +140,7 @@ const cols='grid grid-cols-[minmax(0,1fr)_256px] gap-3',links='stagger grid grid
 
 export function Navbar(p:Props){
  const [sheet,setSheet]=useState(false);const stage=useTokenStage();const gate=useGate();
- const logoRef=useRef<HTMLDivElement>(null);const under=useLightUnder(logoRef,p.view);
+ const logoRef=useRef<HTMLDivElement>(null);const under=useYellowUnder(logoRef,p.view);
  // a closed trigger is quiet text on the pill; the open one is a yellow pill, so the bar itself shows which panel is open
  const trig='h-10 rounded-full bg-transparent px-3.5 text-[14px] font-medium text-foreground/75 transition-colors duration-300 hover:bg-secondary hover:text-foreground focus:bg-transparent focus:text-foreground data-[state=open]:bg-lime data-[state=open]:text-ink data-[state=open]:hover:bg-lime data-[state=open]:focus:bg-lime';
  const go=(l:NavLink)=>p.navigate(l.id,l.doc);
@@ -153,13 +156,13 @@ export function Navbar(p:Props){
      <Button variant="outline" size="icon" className="size-10 rounded-full min-[1024px]:hidden max-[820px]:hidden" onClick={()=>setSheet(true)} aria-label="Open menu"><I id="grid"/></Button>
     </div>;
  return <>
-  {/* desktop: no band across the page. The logo stands bare (user, 6 Oct 2026: no border, no shadow) and takes
-      black or white from what is under it; the menu is a round pill in the OTHER theme (black on the white
+  {/* desktop: no band across the page. The logo stands bare (user, 6 Oct 2026: no border, no shadow) and is
+      yellow, black only over a yellow surface; the menu is a round pill in the OTHER theme (black on the white
       page, white on the dark one: the page's contrast element), and the gap between the two lets clicks
       through to the page. Phones keep a solid top bar with the tools bare on it. */}
   <header className={cn('pointer-events-none fixed inset-x-0 top-0 z-40 flex justify-center px-3 py-3 max-[820px]:pointer-events-auto max-[820px]:bg-background max-[820px]:px-0 max-[820px]:py-0',p.appMode&&'min-[821px]:hidden')}>
    <div className="flex w-[calc(100%*6/7)] items-center justify-between gap-x-3 max-[1100px]:w-full max-[820px]:flex max-[820px]:h-[var(--top)] max-[820px]:items-center max-[820px]:justify-between max-[820px]:border-b max-[820px]:px-4">
-    <div ref={logoRef} style={under===null?undefined:{color:under?'#fafafa':'#0a0a0a'}} className="pointer-events-auto flex h-14 w-fit shrink-0 items-center text-foreground transition-colors duration-300 max-[820px]:h-auto"><Logo className="text-inherit" onClick={()=>p.navigate('home')}/></div>
+    <div ref={logoRef} style={under?{color:'#0a0a0a'}:undefined} className="pointer-events-auto flex h-14 w-fit shrink-0 items-center text-lime transition-colors duration-300 max-[820px]:h-auto"><Logo className="text-inherit" onClick={()=>p.navigate('home')}/></div>
     <div className="tone-flip pointer-events-auto relative flex h-14 w-fit min-w-0 items-center gap-1 rounded-full py-2 pr-2 pl-2.5 ring-1 ring-border shadow-[0_18px_40px_-20px_rgb(0_0_0/.55)] max-[820px]:hidden">
     <NavigationMenu viewport={false} className="static max-w-none flex-none max-[1023px]:hidden [&>div]:!static">
      <NavigationMenuList className="gap-0.5">

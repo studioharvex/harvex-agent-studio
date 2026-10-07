@@ -1,8 +1,8 @@
-# Deploy ke Coolify (Docker Compose): preview.harvex.example
+# Deploy ke Coolify (Docker Compose): preview.harvex.studio
 
-Panduan ini untuk **preview** di `preview.<domain utama>`, contohnya `preview.harvex.example`. `harvex.example` hanya domain contoh (domain Harvex belum ada): ganti dengan domainmu sendiri di semua langkah.
+Panduan ini untuk **preview** di `preview.<domain utama>`, contohnya `preview.harvex.studio`. `harvex.studio` adalah domain Harvex: kalau kamu memasang salinan sendiri, ganti dengan domainmu di semua langkah.
 
-Belum ada yang di-deploy: belum ada situs, repo GitHub, resource Coolify, token HARVEX, vault maupun Safe. Semua langkah di bawah masih harus dikerjakan dari nol.
+Belum ada yang on-chain: belum ada token HARVEX, vault maupun Safe, jadi semua fitur chain tetap OFF.
 
 Production nanti memakai cara yang sama, hanya domain, secret dan volume-nya yang berbeda (lihat bagian akhir).
 
@@ -62,13 +62,13 @@ Kalau memakai Cloudflare, set dulu ke **DNS only** (awan abu-abu) supaya Coolify
 ## 3. Buat resource di Coolify
 1. Project → **+ New** → **Private Repository** (atau Public) → pilih repo dan branch `main`.
 2. **Build Pack: Docker Compose**, dengan Docker Compose Location `/docker-compose.yml`.
-3. Di pengaturan service **harvex**, isi Domains dengan `https://preview.harvex.example:8787`.
-   `:8787` hanya memberi tahu proxy Coolify port container-nya. Pengunjung tetap membuka `https://preview.harvex.example` tanpa port.
+3. Di pengaturan service **harvex**, isi Domains dengan `https://preview.harvex.studio:8787`.
+   `:8787` hanya memberi tahu proxy Coolify port container-nya. Pengunjung tetap membuka `https://preview.harvex.studio` tanpa port.
 4. Isi tab **Environment Variables**:
 
 | Variabel | Isi untuk preview |
 | --- | --- |
-| `APP_ORIGIN` | `https://preview.harvex.example` (wajib, tanpa `/` di akhir) |
+| `APP_ORIGIN` | `https://preview.harvex.studio` (wajib, tanpa `/` di akhir) |
 | `BETTER_AUTH_SECRET` | 32+ karakter acak, **berbeda** dari production (wajib) |
 | `CHAIN_NETWORK` | `testnet` |
 
@@ -91,8 +91,8 @@ Di preview token-nya bernama **tUSDT / tHARVEX** (token tiruan buatan script itu
 
 ## 4. Cek setelah deploy
 ```bash
-curl -s https://preview.harvex.example/api/chain
-curl -s https://preview.harvex.example/robots.txt
+curl -s https://preview.harvex.studio/api/chain
+curl -s https://preview.harvex.studio/robots.txt
 ```
 - Perintah pertama harus mengembalikan JSON berisi `"chainId":97`.
 - Perintah kedua harus berisi `Disallow: /`.
@@ -175,7 +175,7 @@ roadmap adalah teks, bukan env: ubah di `lib/harvex3d/src/content.js` (lalu `nod
 
 ## 4c. Tes end-to-end setelah deploy
 ```bash
-BASE=https://preview.harvex.example node scripts/smoke.mjs
+BASE=https://preview.harvex.studio node scripts/smoke.mjs
 ```
 Yang dites:
 - semua route publik dan dashboard, redirect login, 404 dan header keamanan;
@@ -196,10 +196,10 @@ docker run --rm -v <nama-volume-harvex-data>:/data -v $PWD:/backup alpine tar cz
 - **Restore:** stop container, salin `harvex-YYYY-MM-DD.sqlite` menimpa file `<hash>.sqlite` di `/data/v3/d1/miniflare-D1DatabaseObject/`, hapus file `-wal`/`-shm` di sebelahnya, lalu start lagi.
 - **Rollback kode:** pilih deployment sebelumnya di Coolify. Migration tidak di-rollback, karena semuanya hanya menambah tabel.
 
-## 6. Production nanti (domain utama, contoh: harvex.example)
+## 6. Production nanti (domain utama, contoh: harvex.studio)
 Buat **resource terpisah** dari repo yang sama:
-- Domain `https://harvex.example:8787`
-- `APP_ORIGIN=https://harvex.example`
+- Domain `https://harvex.studio:8787`
+- `APP_ORIGIN=https://harvex.studio`
 - `BETTER_AUTH_SECRET` baru
 - Volume sendiri (dibuat otomatis per resource)
 

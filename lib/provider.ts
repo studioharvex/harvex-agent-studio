@@ -214,7 +214,7 @@ async function callProvider(config:ProviderConfig,agent:Agent,skill:string,promp
   for(const model of models){
    const left=100000-(Date.now()-started);if(left<5000)break;
    let response:Response;
-   try{response=await fetch(base,{method:'POST',redirect:'manual',headers:{Authorization:`Bearer ${config.AI_API_KEY}`,'Content-Type':'application/json','HTTP-Referer':'https://harvex.example','X-Title':'Harvex Agent Studio'},
+   try{response=await fetch(base,{method:'POST',redirect:'manual',headers:{Authorization:`Bearer ${config.AI_API_KEY}`,'Content-Type':'application/json','HTTP-Referer':'https://harvex.studio','X-Title':'Harvex Agent Studio'},
     body:JSON.stringify({model,max_tokens:compatMaxTokens(config),temperature:0.6,...reasoning,messages:[{role:'system',content:systemPrompt(agent,skill,false,opts.guard,opts.about)},{role:'user',content:prompt}]}),signal:AbortSignal.timeout(Math.min(90000,left))});}
    catch(e){const timedOut=(e as Error).name==='TimeoutError';if(timedOut)billed=true;last=new Error(`${model}: ${timedOut?'timed out':(e as Error).message}`);continue;}
    if(response.status>=300&&response.status<400)throw new AIError(`${base.host} redirected the request (HTTP ${response.status}); check AI_BASE_URL`,billed);

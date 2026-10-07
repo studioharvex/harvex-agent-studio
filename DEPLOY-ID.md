@@ -3,12 +3,12 @@
 Panduan ini untuk hosting di akun Cloudflare-mu sendiri. Semua kunci rahasia dimasukkan
 langsung ke Cloudflare, tidak pernah ditulis di file project.
 
-`harvex.example` di panduan ini hanya domain contoh (belum ada situs yang di-deploy). Ganti dengan
+`harvex.studio` di panduan ini adalah domain Harvex. Kalau kamu memasang salinan sendiri, ganti dengan
 domain milikmu di semua langkah. Bagian 6 (AI) dan 7 (chain) juga berlaku untuk Docker/Coolify: di sana variabelnya
 diisi di env container (mulai dari `.env.compose.example`), bukan lewat `wrangler secret`.
 
 ## 0. Yang harus sudah ada
-- Domain sendiri (di contoh: `harvex.example`).
+- Domain sendiri (di contoh: `harvex.studio`).
 - Akun Cloudflare (gratis cukup untuk mulai; Workers Paid $5/bulan disarankan untuk produksi).
 - Akun OpenAI Platform dengan saldo (untuk skill AI). Boleh dilewati dulu; skill akan memakai
   contoh alur sampai diaktifkan.
@@ -56,7 +56,7 @@ Tabel login (`drizzle/0004_better_auth.sql`) sudah ikut di langkah 4. Set secret
 node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
 npx wrangler secret put BETTER_AUTH_SECRET --config dist/server/wrangler.deploy.json
 ```
-Pastikan `APP_ORIGIN` = alamat situsmu, misalnya `https://harvex.example` (domain SIWE harus sama dengan domain situs).
+Pastikan `APP_ORIGIN` = alamat situsmu, misalnya `https://harvex.studio` (domain SIWE harus sama dengan domain situs).
 
 
 ## 6. Aktifkan AI (opsional, kapan saja)
@@ -274,9 +274,9 @@ EVM_TOOLS=../evm-tools BASE=http://localhost:5173 ROUNDS=5 node scripts/verify-t
 
 Alur klaim tiap epoch (operator), setelah `CLAIMS_CONTRACT` ada:
 ```sh
-curl -X POST https://harvex.example/api/claims/epoch -H "Authorization: Bearer $CLAIMS_ADMIN_TOKEN" -d '{"action":"build"}'
+curl -X POST https://harvex.studio/api/claims/epoch -H "Authorization: Bearer $CLAIMS_ADMIN_TOKEN" -d '{"action":"build"}'
 # multisig memanggil HarvexClaims.setMerkleRoot(root) dan mengisi kontrak dengan USDT secukupnya
-curl -X POST https://harvex.example/api/claims/epoch -H "Authorization: Bearer $CLAIMS_ADMIN_TOKEN" -d '{"action":"publish","epoch":1,"txHash":"0x…"}'
+curl -X POST https://harvex.studio/api/claims/epoch -H "Authorization: Bearer $CLAIMS_ADMIN_TOKEN" -d '{"action":"publish","epoch":1,"txHash":"0x…"}'
 ```
 HarvexClaims BELUM diaudit secara independen (review internal: contracts/SECURITY-REVIEW.md). Audit dulu sebelum mainnet. Server tidak pernah memegang private key yang bisa memindahkan dana.
 
@@ -331,7 +331,7 @@ Pengaman yang berlaku di kedua cara:
 
 **Isi ulang vault (manual).** Kirim token reward ke `REWARD_CONTRACT`, lalu catat tx-nya (untuk riwayat di dashboard):
 ```sh
-curl -X POST https://harvex.example/api/rewards/admin -H "Authorization: Bearer $CLAIMS_ADMIN_TOKEN" -d '{"action":"fund","txHash":"0x…"}'
+curl -X POST https://harvex.studio/api/rewards/admin -H "Authorization: Bearer $CLAIMS_ADMIN_TOKEN" -d '{"action":"fund","txHash":"0x…"}'
 ```
 - Selama reward menyala, scheduler juga membaca sendiri transfer token reward ke vault dari chain, jadi isi ulang
   yang lupa dicatat tetap masuk riwayat (dan tidak pernah terhitung dua kali).
@@ -361,10 +361,10 @@ Yang tetap manual: isi ulang vault, harga (kalau tanpa feed), dan, tanpa root po
 
 Alur manual (kalau `REWARD_AUTO=false`), token admin = `CLAIMS_ADMIN_TOKEN`:
 ```sh
-curl -X POST https://harvex.example/api/rewards/admin -H "Authorization: Bearer $CLAIMS_ADMIN_TOKEN" -d '{"action":"sync"}'
-curl -X POST https://harvex.example/api/rewards/admin -H "Authorization: Bearer $CLAIMS_ADMIN_TOKEN" -d '{"action":"build"}'
+curl -X POST https://harvex.studio/api/rewards/admin -H "Authorization: Bearer $CLAIMS_ADMIN_TOKEN" -d '{"action":"sync"}'
+curl -X POST https://harvex.studio/api/rewards/admin -H "Authorization: Bearer $CLAIMS_ADMIN_TOKEN" -d '{"action":"build"}'
 # multisig memanggil setMerkleRoot(root) di REWARD_CONTRACT, lalu:
-curl -X POST https://harvex.example/api/rewards/admin -H "Authorization: Bearer $CLAIMS_ADMIN_TOKEN" -d '{"action":"publish","period":1,"txHash":"0x…"}'
+curl -X POST https://harvex.studio/api/rewards/admin -H "Authorization: Bearer $CLAIMS_ADMIN_TOKEN" -d '{"action":"publish","period":1,"txHash":"0x…"}'
 ```
 Salah hitung sebelum publish? `{"action":"discard","period":N}`. Ganti `REWARD_HARVEX_PER_UNIT`? `{"action":"rebuild"}`.
 Holder klaim sendiri dari /dashboard/rewards (bayar gas sendiri dengan BNB), setelah mengisi negara domisili dan
@@ -387,7 +387,7 @@ HarvexClaims belum diaudit independen dan belum pernah dijalankan di BNB Smart C
 sesudahnya pun mulai dengan jumlah kecil.
 
 **Jadwal agent di Cloudflare Workers:** tidak ada ticker bawaan. Buat cron (misalnya Cloudflare Cron atau cron-job.org) yang tiap menit memanggil
-`POST https://harvex.example/api/schedules/tick` dengan header `Authorization: Bearer $SCHEDULER_TOKEN` (secret 32+ karakter).
+`POST https://harvex.studio/api/schedules/tick` dengan header `Authorization: Bearer $SCHEDULER_TOKEN` (secret 32+ karakter).
 Di Docker/Coolify ini sudah otomatis.
 
 ## 8. Fee platform (opsional)

@@ -19,7 +19,7 @@ export function harvexFacts():string|null{
  const c=chainConfig();if(!c.harvex)return null;
  const rc=rewardConfig(c);const ref=referralConfig();const tier=TIERS.find(t=>t.min>0n);
  // the public address of this site (APP_ORIGIN; without it the same fallback as app/layout.tsx)
- const host=String((env as unknown as {APP_ORIGIN?:string}).APP_ORIGIN||'https://harvex.example').replace(/^https?:\/\//,'').replace(/\/+$/,'');
+ const host=String((env as unknown as {APP_ORIGIN?:string}).APP_ORIGIN||'https://harvex.studio').replace(/^https?:\/\//,'').replace(/\/+$/,'');
  const facts=[
   'Harvex Agent Studio is where people shape characters into AI agents, and others pay credits to chat with them or hand them tasks.',
   `The HARVEX token is live on ${c.name}.`,

@@ -29,7 +29,7 @@ export async function GET(request:Request){
  const hit=KEPT.get(id);if(hit&&hit.until>Date.now())return png(hit.body.slice(0));
  const ca=getCharacter(d.a.skin),cb=getCharacter(d.b.skin);
  const [logo,ia,ib]=await Promise.all([asset(`${origin}/brands/harvex-logo-lime.png`,'image/png'),asset(`${origin}/characters/deck/${ca.id}.png`,'image/png'),asset(`${origin}/characters/deck/${cb.id}.png`,'image/png')]);
- const image=new ImageResponse(duelCard({logo,kicker:'ARENA',muted:'',bright:excerpt(d.question,130),chips:['ONE QUESTION','TWO AGENTS'],foot:'HARVEX.EXAMPLE/ARENA · WHICH ANSWER IS BETTER?',
+ const image=new ImageResponse(duelCard({logo,kicker:'ARENA',muted:'',bright:excerpt(d.question,130),chips:['ONE QUESTION','TWO AGENTS'],foot:'HARVEX.STUDIO/ARENA · WHICH ANSWER IS BETTER?',
   a:{tag:ca.role,name:d.a.name,img:ia},b:{tag:cb.role,name:d.b.name,img:ib}}),{width:DUEL_W,height:DUEL_H});
  const body=await image.arrayBuffer();
  if(logo&&ia&&ib){if(KEPT.size>=64)KEPT.clear();KEPT.set(id,{until:Date.now()+600_000,body:body.slice(0)});}

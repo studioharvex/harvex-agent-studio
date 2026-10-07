@@ -1,7 +1,7 @@
 {
   "workerName": "harvex-studio",
-  "domain": "harvex.example",
-  "origin": "https://harvex.example",
+  "domain": "harvex.studio",
+  "origin": "https://harvex.studio",
   "d1DatabaseName": "harvex-studio-db",
   "d1DatabaseId": "PASTE-THE-DATABASE-ID-FROM-wrangler-d1-create",
   "aiEnabled": false,

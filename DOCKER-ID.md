@@ -10,7 +10,7 @@ Dua cara, image dan database-nya sama:
 App menolak start tanpa https (`APP_ORIGIN` wajib https), jadi selalu ada proxy TLS di depannya.
 Database = SQLite (D1) di volume `harvex-data`. Jalankan **1 container saja**.
 
-`harvex.example` di bawah hanya domain contoh (belum ada yang di-deploy): ganti dengan domainmu.
+`harvex.studio` di bawah adalah domain Harvex: kalau kamu memasang salinan sendiri, ganti dengan domainmu.
 
 ## 1. Siapkan server (VPS biasa)
 
@@ -25,7 +25,7 @@ git clone <repo> harvex && cd harvex
 cp .env.compose.example .env
 ```
 Isi minimal:
-- `HARVEX_DOMAIN=harvex.example` dan `APP_ORIGIN=https://harvex.example` (sama, `APP_ORIGIN` pakai https://);
+- `HARVEX_DOMAIN=harvex.studio` dan `APP_ORIGIN=https://harvex.studio` (sama, `APP_ORIGIN` pakai https://);
 - `BETTER_AUTH_SECRET` dan `CLAIMS_ADMIN_TOKEN`: acak, 32+ karakter
   (`node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"`);
 - `AI_API_KEY` (Gemini, paid tier untuk user sungguhan);
@@ -47,15 +47,15 @@ docker compose -f docker-compose.yml -f docker-compose.standalone.yml up -d --bu
 docker compose -f docker-compose.yml -f docker-compose.standalone.yml logs -f harvex
 ```
 Di log harus terlihat: migration diterapkan (start pertama: semua file di `drizzle/`), `worker variables: ...`, lalu
-`starting on 0.0.0.0:8787 for https://harvex.example`. Healthcheck memanggil `/api/chain` tiap 30 detik; Caddy baru
+`starting on 0.0.0.0:8787 for https://harvex.studio`. Healthcheck memanggil `/api/chain` tiap 30 detik; Caddy baru
 menerima trafik setelah container sehat.
 
 ## 4. Cek setelah deploy
 
 ```sh
-curl -s https://harvex.example/api/chain | head -c 300
-curl -s -X POST https://harvex.example/api/ai/check -H "Authorization: Bearer $CLAIMS_ADMIN_TOKEN"
-BASE=https://harvex.example node scripts/smoke.mjs
+curl -s https://harvex.studio/api/chain | head -c 300
+curl -s -X POST https://harvex.studio/api/ai/check -H "Authorization: Bearer $CLAIMS_ADMIN_TOKEN"
+BASE=https://harvex.studio node scripts/smoke.mjs
 ```
 `/api/ai/check` menjalankan satu tugas pendek ke provider AI yang dipasang dan menampilkan provider, model dan error
 asli kalau gagal. `node scripts/smoke.mjs` dijalankan dari folder project yang sudah `npm ci`.

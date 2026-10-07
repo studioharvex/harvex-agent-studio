@@ -3,7 +3,7 @@
    STOP THE DEV SERVER FIRST: on Windows a running server holds lib/<name>3d open and the folder rename fails with
    EPERM after the text and the file names were already changed.
    Usage: node scripts/rename-brand.mjs <OLD> <NEW> [old-domain new-domain]
-     node scripts/rename-brand.mjs HARVEX ZENO harvex.example zeno.app
+     node scripts/rename-brand.mjs HARVEX ZENO harvex.studio zeno.app
    OLD and NEW are replaced in three spellings (HARVEX, Harvex, harvex), the domain in two (lower and UPPER, as the link
    cards print it). Skips node_modules, .git, build output and binary files. Check first that NEW is not already a
    word in the project (`git grep -il <new>`): a character is called Nova, for one.

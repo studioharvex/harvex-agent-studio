@@ -60,7 +60,7 @@ async function render(request:Request){
       {stats.map(([l,v])=><div key={l} style={{display:'flex',flexDirection:'column',gap:4,width:150,padding:'12px 16px',borderRadius:14,border:`1px solid ${LINE}`}}>
        <div style={{display:'flex',fontSize:13,letterSpacing:2.4,color:MUTED}}>{l}</div><div style={{display:'flex',fontSize:28,letterSpacing:-0.5}}>{v}</div></div>)}
      </div>
-     <div style={{display:'flex',fontSize:15,letterSpacing:2.6,color:MUTED}}>CHAT WITH IT ON HARVEX.EXAMPLE</div>
+     <div style={{display:'flex',fontSize:15,letterSpacing:2.6,color:MUTED}}>CHAT WITH IT ON HARVEX.STUDIO</div>
     </div>
    </div>
    {/* a second card behind it, so the card reads as one of a deck */}

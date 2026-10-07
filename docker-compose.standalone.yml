@@ -2,7 +2,7 @@
 # The app refuses http origins, so it is never served without TLS. Point the domain's DNS (A/AAAA) at the server first.
 #   cp .env.compose.example .env        (fill it; .env is git-ignored)
 #   docker compose -f docker-compose.yml -f docker-compose.standalone.yml up -d --build
-# HARVEX_DOMAIN is the host name only (harvex.example), APP_ORIGIN the full origin (https://harvex.example).
+# HARVEX_DOMAIN is the host name only (harvex.studio), APP_ORIGIN the full origin (https://harvex.studio).
 # Guide: DOCKER-ID.md. On Coolify use docker-compose.yml alone: Coolify's own proxy does TLS.
 services:
   caddy:

@@ -3,7 +3,7 @@ HARVEX AGENT STUDIO — INTEGRATION GUIDE
 What this file is
 A short technical note for operators who host Harvex themselves. The full guides are in the
 repository (START-HERE-ID.md, DEPLOY-ID.md, COOLIFY-ID.md, DOCKER-ID.md) and in the Docs
-on the site. "harvex.example" in the guides is a placeholder domain: Harvex has no domain yet.
+on the site. "harvex.studio" in the guides is Harvex's own domain: use yours when you host a copy.
 
 Current product state
 Built and working without any chain setting: character studio (three.js), agent builder,

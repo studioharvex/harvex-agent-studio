@@ -21,8 +21,8 @@ Read this before anything else: most of what touches a chain is written but swit
 | Audit of `contracts/`, legal review of top-ups, claims or rewards | Not done. |
 | Tests on BNB Smart Chain mainnet or testnet | Not done. Chain features were only ever run against a local chain. |
 
-A preview build of the site runs on Cloudflare without a custom domain; `harvex.example` in the guides is a
-placeholder. Parts of that preview can be kept closed ("not open yet") with the `CLOSED_SECTIONS` setting.
+The site's domain is `harvex.studio`; replace it with your own where the guides name it and you host a copy.
+Parts of the site can be kept closed ("not open yet") with the `CLOSED_SECTIONS` setting.
 Credits have no monetary value.
 
 ## What is in it

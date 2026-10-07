@@ -22,7 +22,7 @@ const log=m=>console.log(`[harvex] ${m}`);
 
 // 1. safety checks
 const origin=(E.APP_ORIGIN||'').replace(/[/]+$/,'');
-if(!/^https?:\/\/[^/\s]+$/.test(origin))fail('Set APP_ORIGIN to the public URL of the site, for example https://harvex.example (no path).');
+if(!/^https?:\/\/[^/\s]+$/.test(origin))fail('Set APP_ORIGIN to the public URL of the site, for example https://harvex.studio (no path).');
 if(origin.startsWith('http:')&&!devFlags)fail('APP_ORIGIN must use https on a public server. Set HARVEX_ALLOW_DEV_FLAGS=true only for a local test.');
 if((E.BETTER_AUTH_SECRET||'').length<32||/\s/.test(E.BETTER_AUTH_SECRET||''))fail('Set BETTER_AUTH_SECRET to 32+ random characters: node -e "console.log(require(\'crypto\').randomBytes(32).toString(\'base64url\'))"');
 for(const k of ['AUTH_TRUST_SITES_HEADERS'])

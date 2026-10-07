@@ -19,7 +19,7 @@ function harvexToken(): { token: HarvexToken | null; test: boolean } {
 // The public origin is only known at runtime (APP_ORIGIN). Without metadataBase the share image was emitted as
 // http://localhost:3000/og.png, so link previews on X, Telegram and WhatsApp had no picture.
 export function generateMetadata(): Metadata {
-  let base = new URL("https://harvex.example");
+  let base = new URL("https://harvex.studio");
   try { base = new URL((env as unknown as { APP_ORIGIN?: string }).APP_ORIGIN || base.href); } catch { /* keep the default */ }
   const description = "Shape a character, write its brief, give it skills and hand it the work.";
   return {

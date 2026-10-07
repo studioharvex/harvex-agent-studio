@@ -17,9 +17,9 @@ import {duelCard} from '@/lib/og-duel';
 import {board} from '@/lib/board';
 
 const W=1200,H=630;
-/* The line at the foot of a card: the site's address and the page. 'HARVEX.EXAMPLE' is the placeholder that
-   scripts/rename-brand.mjs replaces once there is a domain; until then a card names the studio, not a made-up address. */
-const SITE='HARVEX.EXAMPLE';
+/* The line at the foot of a card: the site's address and the page. scripts/rename-brand.mjs writes the domain
+   here; while it is a placeholder (.EXAMPLE) a card names the studio, not a made-up address. */
+const SITE='HARVEX.STUDIO';
 const foot=(page:string)=>SITE.endsWith('.EXAMPLE')?`HARVEX AGENT STUDIO · /${page}`:`${SITE}/${page}`;
 
 /** Pictures that could not be loaded since the server started: a card rendered without one of them is not kept. */

@@ -13,7 +13,7 @@ import {execFileSync} from 'node:child_process';
 import {fileURLToPath, pathToFileURL} from 'node:url';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
-const NAME = process.argv[2] || 'Harvex', WORD = NAME.toLowerCase(), DOMAIN = (process.argv[3] || 'harvex.example').toUpperCase();
+const NAME = process.argv[2] || 'Harvex', WORD = NAME.toLowerCase(), DOMAIN = (process.argv[3] || 'harvex.studio').toUpperCase();
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
 const candidates = [process.env.CHROME,

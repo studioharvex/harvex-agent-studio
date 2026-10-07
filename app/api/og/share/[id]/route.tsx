@@ -40,7 +40,7 @@ export async function GET(request:Request){
       {asked?<div style={{display:'flex',alignSelf:'flex-end',maxWidth:600,padding:'14px 20px',borderRadius:24,borderBottomRightRadius:6,backgroundColor:TEXT,color:INK,fontSize:26,lineHeight:1.28}}>{asked}</div>:null}
       <div style={{display:'flex',alignSelf:'flex-start',maxWidth:680,padding:'18px 22px',borderRadius:24,borderBottomLeftRadius:6,backgroundColor:'#1a1a1a',border:`1px solid ${LINE}`,color:TEXT,fontSize:said.length>120?27:32,lineHeight:1.3}}>{said}</div>
      </div>
-     <div style={{display:'flex',fontSize:15,letterSpacing:2.6,color:MUTED}}>HARVEX.EXAMPLE · CHAT WITH IT YOURSELF</div>
+     <div style={{display:'flex',fontSize:15,letterSpacing:2.6,color:MUTED}}>HARVEX.STUDIO · CHAT WITH IT YOURSELF</div>
     </div>
     <div style={{display:'flex',flexDirection:'column',justifyContent:'space-between',position:'absolute',left:884,top:132,width:268,height:366,padding:20,borderRadius:22,backgroundColor:'#ffe600',color:INK,transform:'rotate(4deg)',boxShadow:'0 24px 60px rgba(0,0,0,0.45)'}}>
      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',fontSize:14,letterSpacing:2.2}}>

@@ -3,8 +3,8 @@
 Panduan menjalankan dan menguji project di komputer sendiri. Untuk deploy baca `DEPLOY-ID.md` (Cloudflare) atau
 `COOLIFY-ID.md` / `DOCKER-ID.md` (Docker Compose).
 
-Belum ada yang di-deploy: belum ada situs publik (`harvex.example` di semua panduan hanya domain
-contoh, ganti dengan domainmu sendiri), belum ada token HARVEX, vault reward, Safe, maupun kontrak klaim.
+`harvex.studio` adalah domain Harvex: kalau kamu memasang salinan sendiri, ganti dengan domainmu di semua
+panduan. Belum ada yang on-chain: belum ada token HARVEX, vault reward, Safe, maupun kontrak klaim.
 
 ## Isi repo
 Source website, lockfile, model dan gambar karakter, logo Harvex, database migrations, test scripts dan contoh

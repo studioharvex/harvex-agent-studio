@@ -1,5 +1,5 @@
 /* Merkle tree for cumulative claims, compatible with OpenZeppelin MerkleProof.verify (sorted pairs)
-   and contracts/HarvexClaims.sol:
+   and the HarvexClaims contract (kept outside this repository):
      leaf = keccak256(bytes.concat(keccak256(abi.encode(account, cumulativeAmount))))
    Double hashing stops a 64-byte leaf from being passed off as an inner node. */
 import {encodeAbiParameters,getAddress,keccak256,concat,type Address,type Hex} from 'viem';

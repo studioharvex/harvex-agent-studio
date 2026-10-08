@@ -255,7 +255,7 @@ Tentang script itu:
 | TOPUP_FINALITY | `safe` (default): kredit masuk setelah blok transaksinya berstatus safe, beberapa detik. `finalized`: beberapa detik lebih lama. `soft`: receipt + N blok, hanya untuk tes (container menolaknya di mainnet). Kalau user menutup halaman sebelum selesai, scheduler menyelesaikannya sendiri. |
 | TOPUP_MIN_CONFIRMATIONS | jumlah blok untuk mode `soft`, default 3 |
 | CLAIMS_ENABLED | `true` untuk membuka antrean klaim |
-| CLAIMS_CONTRACT | alamat HarvexClaims yang sudah di-deploy (contracts/HarvexClaims.sol, owner = multisig). Belum ada. |
+| CLAIMS_CONTRACT | alamat HarvexClaims yang sudah di-deploy (owner = multisig). Belum ada. |
 | CLAIMS_ADMIN_TOKEN | token acak 32+ karakter untuk /api/claims/epoch dan /api/rewards/admin (secret) |
 | HARVEX_TOKEN_ADDRESS | alamat token HARVEX di mainnet (token ini belum ada). Kosong = kotak CA di halaman depan menulis "Not deployed yet" dan tier tetap Free. Diisi = kotak CA dan teks status di situs menampilkan alamatnya dan holder tier aktif, tanpa mengubah kode (lihat COOLIFY-ID.md bagian 4b-3) |
 
@@ -278,7 +278,7 @@ curl -X POST https://harvex.studio/api/claims/epoch -H "Authorization: Bearer $C
 # multisig memanggil HarvexClaims.setMerkleRoot(root) dan mengisi kontrak dengan USDT secukupnya
 curl -X POST https://harvex.studio/api/claims/epoch -H "Authorization: Bearer $CLAIMS_ADMIN_TOKEN" -d '{"action":"publish","epoch":1,"txHash":"0x…"}'
 ```
-HarvexClaims BELUM diaudit secara independen (review internal: contracts/SECURITY-REVIEW.md). Audit dulu sebelum mainnet. Server tidak pernah memegang private key yang bisa memindahkan dana.
+HarvexClaims BELUM diaudit secara independen (hanya ada review internal, disimpan di luar repository ini). Audit dulu sebelum mainnet. Server tidak pernah memegang private key yang bisa memindahkan dana.
 
 Sebelum `CLAIMS_ENABLED=true` di produksi, cek database dulu (terminal container, read-only). Yang bisa diklaim hanya
 penghasilan yang dibayar dengan credit beli, dan server menolak membangun epoch kalau total klaim melebihi credit yang

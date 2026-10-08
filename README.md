@@ -18,7 +18,7 @@ Read this before anything else: most of what touches a chain is written but swit
 | Live AI answers | Built. Off until the operator sets a provider key on the server. Without one, every skill returns a clearly labelled workflow sample. |
 | Credit top-ups in USDT, holder tiers, earnings claims, holder rewards | Built. Off until the operator configures them. |
 | HARVEX token, reward vault, multisig, claims contract | Do not exist. Nothing is deployed on any chain. |
-| Audit of `contracts/`, legal review of top-ups, claims or rewards | Not done. |
+| Audit of the claims contract, legal review of top-ups, claims or rewards | Not done. |
 | Tests on BNB Smart Chain mainnet or testnet | Not done. Chain features were only ever run against a local chain. |
 
 The site's domain is `harvex.studio`; replace it with your own where the guides name it and you host a copy.
@@ -105,7 +105,6 @@ they do not, it stops and says so; start the dev server and run `npm run cards` 
 | `lib/` | Server logic: agents, runs, credits, schedules, delivery, chain, rewards, AI providers |
 | `lib/harvex3d/src/` | Source of the character engine and of the docs text. `engine.js`, `data.js` and `content.js` beside it are generated: `node scripts/build-harvex-engine.mjs` |
 | `db/`, `drizzle/` | Schema and migrations. Migrations are never edited after they ship |
-| `contracts/` | `HarvexClaims.sol`, a draft that is neither audited nor deployed, and its internal review |
 | `public/` | Character pictures, the character packs (`sim`, `kit`), wallet logos, link-preview pictures, licences |
 | `scripts/` | Build, deploy and asset scripts |
 | `proxy.ts` | Sign-in redirects, closed sections and security headers |
@@ -141,8 +140,8 @@ generated documents. The website needs none of them to build or run.
 ## Security
 
 Report a vulnerability privately to the maintainers instead of opening a public issue.
-[contracts/SECURITY-REVIEW.md](contracts/SECURITY-REVIEW.md) is an internal review of the claims contract. It is
-not an audit.
+The claims contract and the operator's chain tools are kept outside this repository. The contract is a draft with
+an internal review only: it has had no audit.
 
 ## Third-party assets and licence
 

@@ -67,7 +67,9 @@ next-env.d.ts
 /scripts/check-harvex-token.mjs
 /scripts/simulate-vault-mainnet.mjs
 /scripts/rpc-transport.mjs
-/contracts/test/
+/scripts/check-reward-token.mjs
+# the contract source, its review and its test mocks: kept with the operator's tools, not in the repository
+/contracts/
 /VAULT-MAINNET-ID.md
 /GO-LIVE-HARVEX-ID.md
 /REWARDS-ID.md

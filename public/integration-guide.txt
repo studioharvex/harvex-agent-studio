@@ -13,7 +13,7 @@ wallet-only sign-in (Sign-In with Ethereum, EIP-4361, for BNB Smart Chain).
 Built and off until an operator configures it: live AI on a server-side provider, credit
 top-ups in USDT, earnings claims, holder tiers and holder rewards.
 Not deployed: there is no HARVEX token, no claims contract, no reward vault and no multisig,
-and the reward (planned as NVDA, a tokenized share) has no token address set. Rewards pay nothing. The contracts are not
+and the reward (planned as NVDAon, Ondo's tokenized Nvidia share) has no token address set. Rewards pay nothing. The contracts are not
 audited, there is no legal review, and nothing has been tested on BNB Smart Chain; the
 only tests run on a local chain. Preview credits have no monetary value. Without an AI
 provider every skill returns a labelled workflow sample that does not browse, summarise
@@ -82,7 +82,7 @@ Top-ups: the pay token is USDT on BNB Smart Chain, which has 18 decimals, not 6
 is no official USDT on testnet: scripts/deploy-testnet.mjs deploys the project's own mock
 tokens. With TOPUP_FINALITY=safe (default) a top-up is credited once its block is safe,
 which takes seconds on this chain.
-Holder rewards: off. The plan is NVDA; no address is set (REWARD_TOKEN_ADDRESS can be any
+Holder rewards: off. The plan is NVDAon; no address is set (REWARD_TOKEN_ADDRESS can be any
 plain BEP-20; REWARD_TOKEN_SYMBOL and REWARD_TOKEN_DECIMALS must match it).
 Wallets in the sign-in picker: MetaMask, Coinbase Wallet, Trust Wallet, Rabby, OKX Wallet,
 and any installed EIP-6963 wallet.

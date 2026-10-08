@@ -125,6 +125,8 @@ services:
       REWARD_HARVEX_PER_UNIT: ${REWARD_HARVEX_PER_UNIT:-3000000}
       REWARD_USD_PER_UNIT_HOUR: ${REWARD_USD_PER_UNIT_HOUR:-0.01}
       REWARD_PRICE_FEED: ${REWARD_PRICE_FEED:-}
+      # only for a token that stands for more than one share of what the feed prices (Ondo's tokenized stocks)
+      REWARD_SHARES_ORACLE: ${REWARD_SHARES_ORACLE:-}
       REWARD_PRICE_MAX_AGE_HOURS: ${REWARD_PRICE_MAX_AGE_HOURS:-72}
       REWARD_PERIOD_HOURS: ${REWARD_PERIOD_HOURS:-1}
       REWARD_START_BLOCK: ${REWARD_START_BLOCK:-0}

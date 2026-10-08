@@ -61,7 +61,7 @@ const STATUS = [
  ['Still to do', 'no', [
   'A hosted production studio: none has been deployed, and the domain is still a placeholder',
   'The HARVEX token: it has not launched and has no contract address',
-  'The reward token: none has been chosen; neither a reward vault nor a claims contract nor a multisig has been deployed',
+  'The reward token: the plan names NVDAon, the tokenized Nvidia share of Ondo Global Markets, a third party that has not reviewed the plan; neither a reward vault nor a claims contract nor a multisig has been deployed',
   'An independent audit of HarvexClaims, which serves as reward vault and as claims contract',
   'A legal review of the token and of paying out rewards',
   'Tests of any kind on BNB Smart Chain, mainnet or testnet',

@@ -40,7 +40,7 @@ if(E.REWARD_EXCLUDE)for(const a of E.REWARD_EXCLUDE.split(',').map(x=>x.trim()).
 // BNB Smart Chain mainnet moves real money: only the official USDT, a treasury, and settled (not soft) top-ups.
 // Binance-Peg BSC-USD (USDT), 18 decimals: bscscan.com/token/0x55d398326f99059fF775485246999027B3197955
 const USDT_MAINNET='0x55d398326f99059ff775485246999027b3197955';
-for(const k of ['PAY_TOKEN_ADDRESS','TOPUP_TREASURY','CLAIMS_CONTRACT','HARVEX_TOKEN_ADDRESS','REWARD_TOKEN_ADDRESS','REWARD_CONTRACT','REWARD_PRICE_FEED'])
+for(const k of ['PAY_TOKEN_ADDRESS','TOPUP_TREASURY','CLAIMS_CONTRACT','HARVEX_TOKEN_ADDRESS','REWARD_TOKEN_ADDRESS','REWARD_CONTRACT','REWARD_PRICE_FEED','REWARD_SHARES_ORACLE'])
  if(E[k]&&!/^0x[0-9a-fA-F]{40}$/.test(E[k]))fail(`${k} must be a 0x address (40 hex characters) or empty.`);
 if(E.CHAIN_NETWORK==='mainnet'){
  if(devFlags)fail('HARVEX_ALLOW_DEV_FLAGS=true is for local tests only and is refused on mainnet.');
@@ -59,6 +59,9 @@ if(E.CHAIN_NETWORK==='mainnet'){
  if(E.REWARD_TOKEN_ADDRESS&&E.REWARD_TOKEN_ADDRESS.toLowerCase()!==USDT_MAINNET&&!(E.REWARD_TOKEN_SYMBOL&&/^\d{1,2}$/.test(E.REWARD_TOKEN_DECIMALS||'')))
   fail('REWARD_TOKEN_ADDRESS is not USDT: set REWARD_TOKEN_SYMBOL and REWARD_TOKEN_DECIMALS to what the token contract says.');
  if(E.REWARD_CONTRACT&&E.CLAIMS_CONTRACT&&E.REWARD_CONTRACT.toLowerCase()===E.CLAIMS_CONTRACT.toLowerCase())fail('REWARD_CONTRACT must be a separate HarvexClaims instance, not CLAIMS_CONTRACT.');
+ // the shares-per-token number multiplies the feed's price: without a feed there is nothing to multiply, and the
+ // operator would believe a hand-set price is being corrected
+ if(E.REWARD_SHARES_ORACLE&&!E.REWARD_PRICE_FEED)fail('REWARD_SHARES_ORACLE needs REWARD_PRICE_FEED: it multiplies the share price of the feed into the price of the token.');
  if(E.REWARDS_ENABLED==='true'&&!E.REWARD_PRICE_FEED)log('warning: no REWARD_PRICE_FEED; the reward token price must be set by hand (/api/rewards/admin {"action":"price"}).');
  // the public RPC refuses eth_getLogs and keeps no old state (measured 5 Oct 2026): the holder record reads Transfer
  // logs, and monthly tier snapshots and the vault's deploy-block search read older blocks
@@ -73,7 +76,7 @@ const KEYS=['APP_ORIGIN','BETTER_AUTH_SECRET','AUTH_TRUST_SITES_HEADERS',
  'SCHEDULES_ENABLED','SCHEDULE_RUN_COST','SCHEDULE_MAX','SCHEDULE_DAILY_RUNS','SCHEDULER_TOKEN','NOTIFY_DISCORD','NOTIFY_MAX','TELEGRAM_BOT_TOKEN','QUESTS_ENABLED','QUEST_CREDITS','REFERRALS_ENABLED','REFERRAL_CREDITS','REFERRAL_MAX','REFERRAL_BOOST_PERCENT','REFERRAL_BOOST_FRIENDS',
  'CHAIN_NETWORK','CHAIN_ID','CHAIN_RPC_URL','CHAIN_LOGS_RPC_URL','PAY_TOKEN_ADDRESS','PAY_TOKEN_SYMBOL','PAY_TOKEN_DECIMALS','TOPUP_TREASURY','CREDITS_PER_TOKEN',
  'TOPUP_MIN_CONFIRMATIONS','TOPUP_FINALITY','CLAIMS_ENABLED','CLAIMS_CONTRACT','CLAIM_MIN_CREDITS','CLAIMS_ADMIN_TOKEN','HARVEX_TOKEN_ADDRESS','TIER_BASE_CREDITS',
- 'REWARDS_ENABLED','REWARD_TOKEN_ADDRESS','REWARD_TOKEN_SYMBOL','REWARD_TOKEN_DECIMALS','REWARD_CONTRACT','REWARD_HARVEX_PER_UNIT','REWARD_USD_PER_UNIT_HOUR','REWARD_PRICE_FEED','REWARD_PRICE_MAX_AGE_HOURS',
+ 'REWARDS_ENABLED','REWARD_TOKEN_ADDRESS','REWARD_TOKEN_SYMBOL','REWARD_TOKEN_DECIMALS','REWARD_CONTRACT','REWARD_HARVEX_PER_UNIT','REWARD_USD_PER_UNIT_HOUR','REWARD_PRICE_FEED','REWARD_SHARES_ORACLE','REWARD_PRICE_MAX_AGE_HOURS',
  'REWARD_START_BLOCK','REWARD_EXCLUDE','REWARD_PERIOD_HOURS','REWARD_AUTO'];
 // earlier reward rules (weekly, then % of circulating) were replaced by the fixed rate: say so
 for(const old of ['REWARD_MIN_HOLD','REWARD_MIN_HOLD_DAYS','REWARD_PERIOD_DAYS','REWARD_MIN_HOLD_PCT','REWARD_MIN_HOLD_HOURS','REWARD_DRIP_HOURS','REWARD_SPLIT'])

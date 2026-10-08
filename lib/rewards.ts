@@ -202,6 +202,14 @@ const noSuchFunction=(e:unknown)=>{const walk=(e as {walk?:(f:(x:unknown)=>boole
 const feedAbi=[{type:'function',name:'latestRoundData',stateMutability:'view',inputs:[],outputs:[{type:'uint80'},{type:'int256'},{type:'uint256'},{type:'uint256'},{type:'uint80'}]},
  {type:'function',name:'decimals',stateMutability:'view',inputs:[],outputs:[{type:'uint8'}]}] as const;
 const pausedAbi=[{type:'function',name:'oraclePaused',stateMutability:'view',inputs:[],outputs:[{type:'bool'}]}] as const;
+/* REWARD_SHARES_ORACLE: the issuer's "shares per token" oracle (Ondo's SyntheticSharesOracle). 18 decimals, and a pause
+   flag that is up around a corporate action. */
+const sharesAbi=[{type:'function',name:'getSValue',stateMutability:'view',inputs:[{type:'address'}],outputs:[{type:'uint128'},{type:'bool'}]}] as const;
+const SHARES_ONE=10n**18n;
+/** Shares per token is 1 when a token starts and only grows with reinvested dividends; a split moves it by the split's
+    ratio. Outside this range the number is not believed (a wrong oracle address answers with anything). */
+const SHARES_MIN=SHARES_ONE/100n,SHARES_MAX=SHARES_ONE*100n;
+const fromShares=(v:bigint)=>{const s=v.toString().padStart(19,'0');return `${s.slice(0,-18)}.${s.slice(-18)}`.replace(/0+$/,'').replace(/\.$/,'');};
 
 /** Reads the Chainlink feed: a positive answer with a timestamp, and no price while the reward token reports
     `oraclePaused()` (tokenized stocks pause their price for a split or dividend; a token without that function is
@@ -221,21 +229,31 @@ async function readFeed(c:ChainConfig,rc:RewardConfig){
   try{paused=await client.readContract({address:rc.token.address,abi:pausedAbi,functionName:'oraclePaused'});}
   catch(e){if(!noSuchFunction(e))throw new HttpError(503,`Could not read whether the ${sym} price is paused for a corporate action. Rewards wait; nothing is lost.`);}
   if(paused)throw new HttpError(409,`The ${sym} price is paused for a corporate action (for example a split). Rewards wait until it resumes; nothing is lost.`);}
- const e8=dec===8?answer:dec>8?answer/10n**BigInt(dec-8):answer*10n**BigInt(8-dec);
+ let e8=dec===8?answer:dec>8?answer/10n**BigInt(dec-8):answer*10n**BigInt(8-dec);
+ // a token that stands for more than one share: the feed prices the share, the issuer's oracle says how many shares a
+ // token is. Without an answer nothing is settled (the share price alone would pay too many tokens).
+ let shares:bigint|null=null;
+ if(rc.sharesOracle&&rc.token){let sv:readonly [bigint,boolean];
+  try{sv=await client.readContract({address:rc.sharesOracle,abi:sharesAbi,functionName:'getSValue',args:[rc.token.address]});}
+  catch{throw new HttpError(503,`Could not read how many shares one ${sym} stands for (REWARD_SHARES_ORACLE). Rewards wait; nothing is lost.`);}
+  if(sv[1])throw new HttpError(409,`The ${sym} price is paused for a corporate action (for example a split). Rewards wait until it resumes; nothing is lost.`);
+  if(sv[0]<SHARES_MIN||sv[0]>SHARES_MAX)throw new HttpError(409,`The shares-per-token number for ${sym} is implausible. Rewards wait; check REWARD_SHARES_ORACLE.`);
+  shares=sv[0];e8=e8*shares/SHARES_ONE;}
  if(e8<=0n||e8>MAX_PRICE_E8)throw new HttpError(409,`The ${sym} price feed returned an implausible price. Rewards wait.`);
- return {e8,round:round.toString(),updatedAt:Number(updatedAt)};
+ return {e8,round:round.toString(),updatedAt:Number(updatedAt),shares};
 }
 
 /** Records the live feed price when a new round appeared (REWARD_PRICE_FEED). A move of 50% or more from the last
     recorded price is not applied on its own: rewards wait until the operator accepts it (fromFeed + confirm). */
 export async function refreshPrice(db:D1Database,{confirm=false}:{confirm?:boolean}={}){
  const c=chainConfig();const rc=rewardConfig(c);const f=await readFeed(c,rc);const sym=rc.token?.symbol||'reward token';
- const last=await latestPrice(db);const source=`chainlink:${f.round}`;
+ // the same round with another shares-per-token number is another price, so that number is part of the mark
+ const last=await latestPrice(db);const source=f.shares===null?`chainlink:${f.round}`:`chainlink:${f.round}:x${f.shares}`;
  if(last&&last.source===source)return {price:fromE8(f.e8),round:f.round,observed:f.updatedAt,updated:false};
  const prev=last?BigInt(last.price_e8):null;
  if(prev&&!confirm&&bigMove(prev,f.e8))throw new HttpError(409,`The ${sym} feed moved by 50% or more (from $${fromE8(prev)} to $${fromE8(f.e8)}). Rewards wait; check for a stock split first, and if the price is right accept it with {"action":"price","fromFeed":true,"confirm":true}.`);
  await db.prepare('INSERT INTO reward_prices (price_e8,previous_e8,note,source,observed,created) VALUES (?,?,?,?,?,?)')
-  .bind(f.e8.toString(),prev?.toString()??null,`Chainlink ${rc.priceFeed} round ${f.round}`,source,f.updatedAt,new Date().toISOString()).run();
+  .bind(f.e8.toString(),prev?.toString()??null,`Chainlink ${rc.priceFeed} round ${f.round}${f.shares===null?'':` x ${fromShares(f.shares)} shares per token`}`.slice(0,120),source,f.updatedAt,new Date().toISOString()).run();
  return {price:fromE8(f.e8),round:f.round,observed:f.updatedAt,updated:true};
 }
 /** Operator price. With REWARD_PRICE_FEED the price comes from Chainlink and this only accepts a large feed move
@@ -598,8 +616,12 @@ export async function adminStatus(db:D1Database){
 /** A cautious default list, kept from the first design (which paid a tokenized stock): no legal review has been done
     for any reward token here, so the operator must have this list checked before rewards are switched on.
     ISO codes refused at the claim step: United States, Canada, United Kingdom, Switzerland (restricted) and
-    Cuba, Belarus, Iran, North Korea, Russia, Syria, Ukraine, South Sudan, Sudan, Myanmar, Venezuela (prohibited). */
-export const BLOCKED_COUNTRIES=['US','CA','GB','CH','CU','BY','IR','KP','RU','SY','UA','SS','SD','MM','VE'];
+    Cuba, Belarus, Iran, North Korea, Russia, Syria, Ukraine, South Sudan, Sudan, Myanmar, Venezuela (prohibited).
+    Afghanistan, Libya and Somalia were added on 8 Oct 2026 with the plan to pay NVDAon: with them the list holds every
+    country Ondo's eligibility page names as prohibited for its tokenized stocks (docs.ondo.finance, read that day; all
+    of Ukraine stays refused, where Ondo names its occupied regions). Ondo also RESTRICTS the EEA, Hong Kong, Singapore,
+    Brazil and Malaysia to qualified investors: that is not in this list and is a question for the legal review. */
+export const BLOCKED_COUNTRIES=['US','CA','GB','CH','CU','BY','IR','KP','RU','SY','UA','SS','SD','MM','VE','AF','LY','SO'];
 export const ATTEST_VERSION='rewards-2026-09-30';
 export async function attest(db:D1Database,owner:string,country:string,confirm:boolean){
  const c=String(country||'').toUpperCase();

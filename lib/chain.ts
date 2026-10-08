@@ -24,7 +24,7 @@
      TIER_BASE_CREDITS        monthly base allotment, default 100
    Holder rewards (lib/rewards.ts, /api/rewards); off until REWARDS_ENABLED=true and all of these are set:
      REWARDS_ENABLED          true to record holders and build reward periods
-     REWARD_TOKEN_ADDRESS     token paid to holders (not chosen yet: any BEP-20 the operator decides on)
+     REWARD_TOKEN_ADDRESS     token paid to holders (planned: NVDAon, see REWARD_PLAN in lib/site.ts; any plain BEP-20 works)
      REWARD_TOKEN_SYMBOL      default USDT      REWARD_TOKEN_DECIMALS default 18
      REWARD_CONTRACT          a SEPARATE HarvexClaims instance deployed for the reward token
      Fixed rate: every complete block of REWARD_HARVEX_PER_UNIT HARVEX held earns
@@ -35,6 +35,12 @@
                               feed directory for BNB Smart Chain).
                               Set: the price is read live from the feed at every settlement and every 15 minutes.
                               Empty: the operator sets it (/api/rewards/admin {action:"price"}), e.g. on testnet.
+     REWARD_SHARES_ORACLE     only for a reward token that stands for MORE THAN ONE share of what the feed prices
+                              (Ondo's tokenized stocks: dividends are reinvested, so a token is worth the share price
+                              times a "shares per token" number that grows). The address of the issuer's oracle with
+                              getSValue(token) -> (shares per token with 18 decimals, paused). Set: the feed's price is
+                              multiplied by it, and nothing is settled while the oracle reports the token as paused
+                              for a corporate action. Empty: the feed's price is the token's price.
      REWARD_PRICE_MAX_AGE_HOURS  periods are not built with a price older than this, default 72
      REWARD_PERIOD_HOURS      period length in hours, default 1: periods close at every full hour UTC
      REWARD_AUTO              true (default): the scheduler builds each closed period and publishes it once the multisig
@@ -48,7 +54,7 @@ type ChainEnv={CHAIN_NETWORK?:string;CHAIN_ID?:string;CHAIN_RPC_URL?:string;CHAI
  TOPUP_TREASURY?:string;CREDITS_PER_TOKEN?:string;TOPUP_MIN_CONFIRMATIONS?:string;TOPUP_FINALITY?:string;CLAIMS_ENABLED?:string;CLAIMS_CONTRACT?:string;CLAIM_MIN_CREDITS?:string;
  CLAIMS_ADMIN_TOKEN?:string;HARVEX_TOKEN_ADDRESS?:string;TIER_BASE_CREDITS?:string;
  REWARDS_ENABLED?:string;REWARD_TOKEN_ADDRESS?:string;REWARD_TOKEN_SYMBOL?:string;REWARD_TOKEN_DECIMALS?:string;REWARD_CONTRACT?:string;
- REWARD_HARVEX_PER_UNIT?:string;REWARD_USD_PER_UNIT_HOUR?:string;REWARD_PRICE_FEED?:string;REWARD_PRICE_MAX_AGE_HOURS?:string;REWARD_START_BLOCK?:string;REWARD_EXCLUDE?:string;REWARD_PERIOD_HOURS?:string;REWARD_AUTO?:string;REWARD_ROOT_POSTER_KEY?:string};
+ REWARD_HARVEX_PER_UNIT?:string;REWARD_USD_PER_UNIT_HOUR?:string;REWARD_PRICE_FEED?:string;REWARD_SHARES_ORACLE?:string;REWARD_PRICE_MAX_AGE_HOURS?:string;REWARD_START_BLOCK?:string;REWARD_EXCLUDE?:string;REWARD_PERIOD_HOURS?:string;REWARD_AUTO?:string;REWARD_ROOT_POSTER_KEY?:string};
 const E=()=>env as unknown as ChainEnv;
 
 /** Official public endpoints (docs.bnbchain.org). The browser only ever sees these. */
@@ -110,7 +116,7 @@ export function rewardConfig(c=chainConfig()){
  const exclude=listed.map(x=>addr(x)).filter((x):x is Address=>!!x);
  return {live:e.REWARDS_ENABLED==='true'&&!!(c.harvex&&token&&contract),harvex:c.harvex,
   token:token?{address:token,symbol:e.REWARD_TOKEN_SYMBOL||'USDT',decimals:Number.isFinite(Number(e.REWARD_TOKEN_DECIMALS))&&e.REWARD_TOKEN_DECIMALS?Math.floor(Number(e.REWARD_TOKEN_DECIMALS)):18}:null,
-  contract,priceFeed:addr(e.REWARD_PRICE_FEED),perUnitWhole,perUnit:perUnitWhole*10n**HARVEX_DECIMALS,rateE8,priceMaxAgeHours:int(e.REWARD_PRICE_MAX_AGE_HOURS,72),
+  contract,priceFeed:addr(e.REWARD_PRICE_FEED),sharesOracle:addr(e.REWARD_SHARES_ORACLE),perUnitWhole,perUnit:perUnitWhole*10n**HARVEX_DECIMALS,rateE8,priceMaxAgeHours:int(e.REWARD_PRICE_MAX_AGE_HOURS,72),
   periodHours:int(e.REWARD_PERIOD_HOURS,1),auto:e.REWARD_AUTO!=='false',
   // root poster (client, 1 Oct 2026): a key that can only post roots on the vault, so claims open every hour; the vault's
   // payout limit bounds what a leaked key could do. Never the owner (Safe) key, never a key holding the vault's tokens.

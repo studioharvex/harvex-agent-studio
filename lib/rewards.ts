@@ -205,10 +205,19 @@ const pausedAbi=[{type:'function',name:'oraclePaused',stateMutability:'view',inp
 /* REWARD_SHARES_ORACLE: the issuer's "shares per token" oracle (Ondo's SyntheticSharesOracle). 18 decimals, and a pause
    flag that is up around a corporate action. */
 const sharesAbi=[{type:'function',name:'getSValue',stateMutability:'view',inputs:[{type:'address'}],outputs:[{type:'uint128'},{type:'bool'}]}] as const;
+/* REWARD_SHARES_ORACLE set to the reward token's OWN address: the token carries the number itself (ERC-8056 "scaled UI
+   amount", what Binance's bStocks use): uiMultiplier() with 18 decimals; balances stay as they are and one token stands
+   for that many shares. Such a token is stopped for a corporate action through its pause manager. */
+const uiAbi=[{type:'function',name:'uiMultiplier',stateMutability:'view',inputs:[],outputs:[{type:'uint256'}]},
+ {type:'function',name:'pauseManager',stateMutability:'view',inputs:[],outputs:[{type:'address'}]}] as const;
+const pauseAbi=[{type:'function',name:'isTokenPaused',stateMutability:'view',inputs:[{type:'address'}],outputs:[{type:'bool'}]}] as const;
 const SHARES_ONE=10n**18n;
-/** Shares per token is 1 when a token starts and only grows with reinvested dividends; a split moves it by the split's
-    ratio. Outside this range the number is not believed (a wrong oracle address answers with anything). */
-const SHARES_MIN=SHARES_ONE/100n,SHARES_MAX=SHARES_ONE*100n;
+/** Shares per token is 1 when a token starts, grows with reinvested dividends, and a split moves it by the split's
+    ratio. Outside this range the number is not believed (a wrong address answers with anything). */
+const SHARES_MIN=SHARES_ONE/1000n,SHARES_MAX=SHARES_ONE*1000n;
+/** A reinvested dividend moves shares per token by a fraction of a percent; a move of 5% or more is a split (or a
+    mistake), and the feed and the number do not have to switch in the same minute. The operator looks first. */
+const sharesJump=(prev:bigint,next:bigint)=>(next>prev?next-prev:prev-next)*20n>=prev;
 const fromShares=(v:bigint)=>{const s=v.toString().padStart(19,'0');return `${s.slice(0,-18)}.${s.slice(-18)}`.replace(/0+$/,'').replace(/\.$/,'');};
 
 /** Reads the Chainlink feed: a positive answer with a timestamp, and no price while the reward token reports
@@ -234,8 +243,17 @@ async function readFeed(c:ChainConfig,rc:RewardConfig){
  // token is. Without an answer nothing is settled (the share price alone would pay too many tokens).
  let shares:bigint|null=null;
  if(rc.sharesOracle&&rc.token){let sv:readonly [bigint,boolean];
-  try{sv=await client.readContract({address:rc.sharesOracle,abi:sharesAbi,functionName:'getSValue',args:[rc.token.address]});}
-  catch{throw new HttpError(503,`Could not read how many shares one ${sym} stands for (REWARD_SHARES_ORACLE). Rewards wait; nothing is lost.`);}
+  const token=rc.token.address;const own=rc.sharesOracle.toLowerCase()===token.toLowerCase();
+  try{
+   if(own){
+    // the token itself: its multiplier, and whether its pause manager has stopped it (a token without one is not paused)
+    const m=await client.readContract({address:token,abi:uiAbi,functionName:'uiMultiplier'});let stopped=false;
+    try{const pm=await client.readContract({address:token,abi:uiAbi,functionName:'pauseManager'});
+     stopped=await client.readContract({address:pm,abi:pauseAbi,functionName:'isTokenPaused',args:[token]});}
+    catch(e){if(!noSuchFunction(e))throw e;}
+    sv=[m,stopped];
+   }else sv=await client.readContract({address:rc.sharesOracle,abi:sharesAbi,functionName:'getSValue',args:[token]});
+  }catch{throw new HttpError(503,`Could not read how many shares one ${sym} stands for (REWARD_SHARES_ORACLE). Rewards wait; nothing is lost.`);}
   if(sv[1])throw new HttpError(409,`The ${sym} price is paused for a corporate action (for example a split). Rewards wait until it resumes; nothing is lost.`);
   if(sv[0]<SHARES_MIN||sv[0]>SHARES_MAX)throw new HttpError(409,`The shares-per-token number for ${sym} is implausible. Rewards wait; check REWARD_SHARES_ORACLE.`);
   shares=sv[0];e8=e8*shares/SHARES_ONE;}
@@ -251,6 +269,10 @@ export async function refreshPrice(db:D1Database,{confirm=false}:{confirm?:boole
  const last=await latestPrice(db);const source=f.shares===null?`chainlink:${f.round}`:`chainlink:${f.round}:x${f.shares}`;
  if(last&&last.source===source)return {price:fromE8(f.e8),round:f.round,observed:f.updatedAt,updated:false};
  const prev=last?BigInt(last.price_e8):null;
+ // a split: shares per token jumps by the split's ratio while the feed's share price falls by it. The two can switch at
+ // different moments, and for a small split the price guard below would not notice the gap
+ const was=/^chainlink:\d+:x(\d+)$/.exec(last?.source||'')?.[1];
+ if(f.shares!==null&&was&&!confirm&&sharesJump(BigInt(was),f.shares))throw new HttpError(409,`Shares per ${sym} moved from ${fromShares(BigInt(was))} to ${fromShares(f.shares)}, which looks like a stock split. Rewards wait; once the feed shows the price after the split ($${fromE8(f.e8)} a token now), accept it with {"action":"price","fromFeed":true,"confirm":true}.`);
  if(prev&&!confirm&&bigMove(prev,f.e8))throw new HttpError(409,`The ${sym} feed moved by 50% or more (from $${fromE8(prev)} to $${fromE8(f.e8)}). Rewards wait; check for a stock split first, and if the price is right accept it with {"action":"price","fromFeed":true,"confirm":true}.`);
  await db.prepare('INSERT INTO reward_prices (price_e8,previous_e8,note,source,observed,created) VALUES (?,?,?,?,?,?)')
   .bind(f.e8.toString(),prev?.toString()??null,`Chainlink ${rc.priceFeed} round ${f.round}${f.shares===null?'':` x ${fromShares(f.shares)} shares per token`}`.slice(0,120),source,f.updatedAt,new Date().toISOString()).run();
@@ -617,10 +639,11 @@ export async function adminStatus(db:D1Database){
     for any reward token here, so the operator must have this list checked before rewards are switched on.
     ISO codes refused at the claim step: United States, Canada, United Kingdom, Switzerland (restricted) and
     Cuba, Belarus, Iran, North Korea, Russia, Syria, Ukraine, South Sudan, Sudan, Myanmar, Venezuela (prohibited).
-    Afghanistan, Libya and Somalia were added on 8 Oct 2026 with the plan to pay NVDAon: with them the list holds every
-    country Ondo's eligibility page names as prohibited for its tokenized stocks (docs.ondo.finance, read that day; all
-    of Ukraine stays refused, where Ondo names its occupied regions). Ondo also RESTRICTS the EEA, Hong Kong, Singapore,
-    Brazil and Malaysia to qualified investors: that is not in this list and is a question for the legal review. */
+    Afghanistan, Libya and Somalia were added on 8 Oct 2026, when the plan first named a tokenized share (they are on
+    the prohibited list one such issuer publishes). The plan now names NVDAB (Binance bStocks): its issuer says the
+    token must not reach Restricted Persons, US persons among them, tells integrators to geo-block with its own country
+    API, and can put a wallet address on the token's blacklist. That list of countries was not read (it is not on the
+    issuer's pages, and the prospectus was not gone through): a question for the legal review. */
 export const BLOCKED_COUNTRIES=['US','CA','GB','CH','CU','BY','IR','KP','RU','SY','UA','SS','SD','MM','VE','AF','LY','SO'];
 export const ATTEST_VERSION='rewards-2026-09-30';
 export async function attest(db:D1Database,owner:string,country:string,confirm:boolean){

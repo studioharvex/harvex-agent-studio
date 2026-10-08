@@ -24,7 +24,7 @@
      TIER_BASE_CREDITS        monthly base allotment, default 100
    Holder rewards (lib/rewards.ts, /api/rewards); off until REWARDS_ENABLED=true and all of these are set:
      REWARDS_ENABLED          true to record holders and build reward periods
-     REWARD_TOKEN_ADDRESS     token paid to holders (planned: NVDAon, see REWARD_PLAN in lib/site.ts; any plain BEP-20 works)
+     REWARD_TOKEN_ADDRESS     token paid to holders (planned: NVDAB, see REWARD_PLAN in lib/site.ts; any plain BEP-20 works)
      REWARD_TOKEN_SYMBOL      default USDT      REWARD_TOKEN_DECIMALS default 18
      REWARD_CONTRACT          a SEPARATE HarvexClaims instance deployed for the reward token
      Fixed rate: every complete block of REWARD_HARVEX_PER_UNIT HARVEX held earns
@@ -36,11 +36,14 @@
                               Set: the price is read live from the feed at every settlement and every 15 minutes.
                               Empty: the operator sets it (/api/rewards/admin {action:"price"}), e.g. on testnet.
      REWARD_SHARES_ORACLE     only for a reward token that stands for MORE THAN ONE share of what the feed prices
-                              (Ondo's tokenized stocks: dividends are reinvested, so a token is worth the share price
-                              times a "shares per token" number that grows). The address of the issuer's oracle with
+                              (tokenized stocks: dividends are reinvested, so a token is worth the share price times
+                              a "shares per token" number that grows, and a split moves it by its ratio). Either the
+                              reward token's OWN address, when the token carries the number as uiMultiplier() (18
+                              decimals; the planned NVDAB), or the address of the issuer's oracle with
                               getSValue(token) -> (shares per token with 18 decimals, paused). Set: the feed's price is
-                              multiplied by it, and nothing is settled while the oracle reports the token as paused
-                              for a corporate action. Empty: the feed's price is the token's price.
+                              multiplied by it, nothing is settled while the token is reported as paused, and a move
+                              of 5% or more in the number waits for the operator. Empty: the feed's price is the
+                              token's price.
      REWARD_PRICE_MAX_AGE_HOURS  periods are not built with a price older than this, default 72
      REWARD_PERIOD_HOURS      period length in hours, default 1: periods close at every full hour UTC
      REWARD_AUTO              true (default): the scheduler builds each closed period and publishes it once the multisig

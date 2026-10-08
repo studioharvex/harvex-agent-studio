@@ -36,7 +36,7 @@ export function RewardEligibility({per=3_000_000,rate='0.01',sym=REWARD_PLAN.sym
      <span className="grid gap-0.5"><b className="text-[14.5px] font-semibold">{title}</b><span className="text-[13px] leading-relaxed text-muted-foreground">{text}</span></span>
     </li>)}
    </ul>
-   <p className="border-t pt-4 text-[12.5px] leading-relaxed text-muted-foreground"><b className="font-semibold text-foreground">{status}</b> {sym===REWARD_PLAN.symbol?`${sym} here means ${REWARD_PLAN.token}, ${REWARD_PLAN.what} issued by ${REWARD_PLAN.issuer}. It is a third party's token: Harvex is not affiliated with Nvidia or with ${REWARD_PLAN.issuer}, and neither has reviewed or approved this plan. `:''}Being eligible is a condition for the reward and promises no payment. No audit of the contract has been done and no legal review has been published.</p>
+   <p className="border-t pt-4 text-[12.5px] leading-relaxed text-muted-foreground"><b className="font-semibold text-foreground">{status}</b> {sym===REWARD_PLAN.symbol?`${sym} here means ${REWARD_PLAN.token}, ${REWARD_PLAN.what} issued by ${REWARD_PLAN.issuer} (${REWARD_PLAN.family}). It is a third party's token: Harvex is not affiliated with ${REWARD_PLAN.apart}, and none of them has reviewed or approved this plan. `:''}Being eligible is a condition for the reward and promises no payment. No audit of the contract has been done and no legal review has been published.</p>
   </div>
  </Slab>;
 }
